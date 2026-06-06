@@ -9,16 +9,16 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
     
-    /* Colores personalizados - Paleta marrón claro y piel suave */
-    --color-piel: #FDF8F0;
-    --color-piel-oscuro: #F5EADD;
-    --color-marron-claro: #D2B48C;
-    --color-marron-medio: #A0522D;
-    --color-marron-oscuro: #6B4226;
-    --color-marron-texto: #4A3728;
+    /* Paleta de colores - Optimizada para contraste */
+    --color-piel: #FEF7E8;           /* Fondo más limpio */
+    --color-piel-oscuro: #F9EDD6;    /* Fondo alternativo */
+    --color-marron-claro: #D4A574;   /* Marrón claro para bordes/botones */
+    --color-marron-medio: #B87333;   /* Marrón medio para hover */
+    --color-marron-oscuro: #7B4B2A;  /* Marrón oscuro para títulos */
+    --color-marron-texto: #4A2C14;   /* Texto principal - MUCHO más oscuro */
+    --color-marron-secundario: #6B4C3A; /* Texto secundario */
 }
 
-/* Clases personalizadas para la paleta cálida */
 @layer utilities {
     .bg-piel {
         background-color: var(--color-piel);
@@ -38,10 +38,28 @@
     .text-marron-oscuro {
         color: var(--color-marron-oscuro);
     }
+    .text-marron-secundario {
+        color: var(--color-marron-secundario);
+    }
     .border-marron-claro {
         border-color: var(--color-marron-claro);
     }
-    .hover\\:bg-marron-claro:hover {
+    .hover\:bg-marron-claro:hover {
         background-color: var(--color-marron-claro);
+    }
+    .hover\:bg-marron-medio:hover {
+        background-color: var(--color-marron-medio);
+    }
+    
+    /* Mejoras de contraste */
+    .card-text {
+        color: var(--color-marron-texto);
+        font-weight: 500;
+        line-height: 1.5;
+    }
+    
+    .text-muted {
+        color: var(--color-marron-secundario);
+        font-weight: 450;
     }
 }

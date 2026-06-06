@@ -9,7 +9,8 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 </head>
-<body class="min-h-screen bg-piel text-marron">
+<body class="min-h-screen bg-piel text-marron-texto font-medium">
+    <!-- Cambié 'text-marron' por 'text-marron-texto' y agregué 'font-medium' -->
     <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(210,180,140,0.15),_transparent_40%),_linear-gradient(#FDF8F0,_#F5EADD)]">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <header class="mb-8 flex flex-col gap-4 rounded-3xl border border-marron-claro bg-white/90 p-6 shadow-sm shadow-marron-claro/70 backdrop-blur-sm md:flex-row md:items-center md:justify-between">
