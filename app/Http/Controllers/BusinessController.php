@@ -73,8 +73,8 @@ class BusinessController extends Controller
 
         Business::create($data);
 
-        return redirect()->route('businesses.index')
-            ->with('success', 'Tu negocio se publicó correctamente.');
+        return redirect()->route('home')
+        ->with('success', 'Tu negocio se publicó correctamente.');
     }
 
     protected function makeUniqueSlug(string $name): string
