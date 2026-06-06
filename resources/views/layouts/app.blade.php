@@ -9,39 +9,39 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 </head>
-<body class="min-h-screen bg-blue-50 text-slate-900">
-    <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.12),_transparent_40%),linear-gradient(#eff6ff,_white)]">
+<body class="min-h-screen bg-piel text-marron">
+    <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(210,180,140,0.15),_transparent_40%),_linear-gradient(#FDF8F0,_#F5EADD)]">
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <header class="mb-8 flex flex-col gap-4 rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-sm shadow-blue-100/70 backdrop-blur-sm md:flex-row md:items-center md:justify-between">
+            <header class="mb-8 flex flex-col gap-4 rounded-3xl border border-marron-claro bg-white/90 p-6 shadow-sm shadow-marron-claro/70 backdrop-blur-sm md:flex-row md:items-center md:justify-between">
                 <div>
-                    <a href="{{ route('home') }}" class="text-2xl font-semibold text-blue-900">Berisso Mapeo</a>
-                    <p class="mt-1 text-sm text-slate-600">Directorios locales de negocios y servicios.</p>
+                    <a href="{{ route('home') }}" class="text-2xl font-semibold text-marron-oscuro">Berisso Mapeo</a>
+                    <p class="mt-1 text-sm text-marron/80">Directorios locales de negocios y servicios.</p>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
-                    <a href="{{ route('home') }}" class="rounded-full border border-blue-200 bg-white px-4 py-2 text-sm text-blue-700 transition hover:bg-blue-50">Inicio</a>
+                    <a href="{{ route('home') }}" class="rounded-full border border-marron-claro bg-white px-4 py-2 text-sm text-marron-oscuro transition hover:bg-piel-oscuro">Inicio</a>
 
                     @auth
-                        <a href="{{ route('businesses.create') }}" class="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Publicar negocio</a>
+                        <a href="{{ route('businesses.create') }}" class="rounded-full bg-marron-claro px-4 py-2 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">Publicar negocio</a>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
-                            <button type="submit" class="rounded-full border border-blue-200 bg-white px-4 py-2 text-sm text-blue-700 transition hover:bg-blue-50">Cerrar sesión</button>
+                            <button type="submit" class="rounded-full border border-marron-claro bg-white px-4 py-2 text-sm text-marron-oscuro transition hover:bg-piel-oscuro">Cerrar sesión</button>
                         </form>
                     @else
-                        <a href="{{ route('login') }}" class="rounded-full border border-blue-200 bg-white px-4 py-2 text-sm text-blue-700 transition hover:bg-blue-50">Ingresar</a>
-                        <a href="{{ route('register') }}" class="rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700">Crear cuenta</a>
+                        <a href="{{ route('login') }}" class="rounded-full border border-marron-claro bg-white px-4 py-2 text-sm text-marron-oscuro transition hover:bg-piel-oscuro">Ingresar</a>
+                        <a href="{{ route('register') }}" class="rounded-full bg-marron-claro px-4 py-2 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">Crear cuenta</a>
                     @endauth
                 </div>
             </header>
 
             @if(session('success'))
-                <div class="mb-6 rounded-2xl border border-green-200 bg-green-50 px-5 py-4 text-green-800 shadow-sm">
+                <div class="mb-6 rounded-2xl border border-marron-claro/50 bg-piel-oscuro px-5 py-4 text-marron-oscuro shadow-sm">
                     {{ session('success') }}
                 </div>
             @endif
 
             @if ($errors->any())
-                <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-800 shadow-sm">
+                <div class="mb-6 rounded-2xl border border-red-300 bg-red-50 px-5 py-4 text-red-800 shadow-sm">
                     <ul class="space-y-1 text-sm">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
