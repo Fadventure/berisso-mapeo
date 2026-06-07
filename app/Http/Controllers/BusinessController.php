@@ -41,17 +41,16 @@ class BusinessController extends Controller
         return view('businesses.index', compact('businesses', 'categories', 'selectedCategory'));
     }
 
+    // ← UN SOLO método show() - Este es el correcto
     public function show(Business $business)
     {
-        $business->load('category', 'user');
-
+        $business->load(['category', 'user', 'images']); // Carga las imágenes también
         return view('businesses.show', compact('business'));
     }
 
     public function create()
     {
         $categories = Category::orderBy('name')->get();
-
         return view('businesses.create', compact('categories'));
     }
 
@@ -65,6 +64,7 @@ class BusinessController extends Controller
             'hours' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:100',
             'website' => 'nullable|url|max:255',
+            'email_lugar' => 'nullable|email|max:255',
             'image' => 'nullable|url|max:255',
         ]);
 
@@ -74,7 +74,7 @@ class BusinessController extends Controller
         Business::create($data);
 
         return redirect()->route('home')
-        ->with('success', 'Tu negocio se publicó correctamente.');
+            ->with('success', 'Tu negocio se publicó correctamente.');
     }
 
     protected function makeUniqueSlug(string $name): string

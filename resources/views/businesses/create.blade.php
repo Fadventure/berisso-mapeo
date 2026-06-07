@@ -75,6 +75,17 @@
                 </div>
 
                 <div>
+                    <label for="email_lugar" class="block text-sm font-medium text-marron-oscuro">Correo electrónico del negocio</label>
+                    <input id="email_lugar" name="email_lugar" type="email" value="{{ old('email_lugar') }}"
+                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                    @error('email_lugar')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
+            <div class="grid gap-6 lg:grid-cols-2">
+                <div>
                     <label for="hours" class="block text-sm font-medium text-marron-oscuro">Horario</label>
                     <input id="hours" name="hours" value="{{ old('hours') }}"
                         class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
@@ -82,16 +93,16 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
 
-            <div>
-                <label for="image" class="block text-sm font-medium text-marron-oscuro">URL de la imagen</label>
-                <input id="image" name="image" type="url" value="{{ old('image') }}"
-                    class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
-                <p class="mt-2 text-sm text-marron/80">Agrega una imagen pública para que tu negocio se vea mejor en el listado.</p>
-                @error('image')
-                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <div>
+                    <label for="image" class="block text-sm font-medium text-marron-oscuro">URL de la imagen</label>
+                    <input id="image" name="image" type="url" value="{{ old('image') }}"
+                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                    <p class="mt-2 text-sm text-marron/80">Agrega una imagen pública para que tu negocio se vea mejor.</p>
+                    @error('image')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
