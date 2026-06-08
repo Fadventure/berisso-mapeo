@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Business;
 
 class AuthController extends Controller
 {
@@ -68,9 +69,15 @@ class AuthController extends Controller
 
         return redirect('/login');
     }
-
+    
     public function dashboard()
     {
-        return view('auth.dashboard');
+        $user = auth()->user();
+        $myBusinesses = Business::where('user_id', $user->id)
+            ->with('category')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('auth.dashboard', compact('myBusinesses'));
     }
 }

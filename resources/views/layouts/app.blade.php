@@ -23,6 +23,9 @@
                     <a href="{{ route('home') }}" class="rounded-full border border-marron-claro bg-white px-4 py-2 text-sm text-marron-oscuro transition hover:bg-piel-oscuro">Inicio</a>
 
                     @auth
+                        <a href="{{ route('dashboard') }}" class="rounded-full border border-marron-claro bg-white px-4 py-2 text-sm text-marron-oscuro transition hover:bg-piel-oscuro">
+                            Mis negocios
+                        </a>
                         <a href="{{ route('businesses.create') }}" class="rounded-full bg-marron-claro px-4 py-2 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">Publicar negocio</a>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
@@ -32,7 +35,7 @@
                         <a href="{{ route('login') }}" class="rounded-full border border-marron-claro bg-white px-4 py-2 text-sm text-marron-oscuro transition hover:bg-piel-oscuro">Ingresar</a>
                         <a href="{{ route('register') }}" class="rounded-full bg-marron-claro px-4 py-2 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">Crear cuenta</a>
                     @endauth
-                </div>
+                </div>  
             </header>
 
             @if(session('success'))
