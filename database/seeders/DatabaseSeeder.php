@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Usuario admin para los negocios con imágenes
         $adminUser = User::firstOrCreate(
             ['email' => 'admin@berisso.com'],
             [
@@ -63,7 +62,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // ==========================================
-        // 3. NEGOCIOS BÁSICOS (sin imágenes múltiples)
+        // 3. NEGOCIOS BÁSICOS (con imágenes funcionales)
         // ==========================================
         $basicBusinesses = [
             [
@@ -74,7 +73,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-123-4567',
                 'website' => 'https://lacostanera.example.com',
                 'hours' => 'Lunes a Domingo: 12:00 - 23:00',
-                'image' => 'https://picsum.photos/seed/rest1/800/600',
+                'image' => 'https://picsum.photos/id/106/800/600', // Pexels: restaurant
                 'email_lugar' => 'lacostanera@gmail.com',
             ],
             [
@@ -85,7 +84,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-445-6789',
                 'website' => 'https://clinicaberisso.example.com',
                 'hours' => 'Lunes a Viernes: 8:00 - 18:00',
-                'image' => 'https://picsum.photos/seed/clinic1/800/600',
+                'image' => 'https://picsum.photos/id/48/800/600', // Pexels: medical
                 'email_lugar' => 'clinica@berisso.com',
             ],
             [
@@ -96,7 +95,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-234-5678',
                 'website' => 'https://supercentral.example.com',
                 'hours' => 'Lunes a Sábado: 8:00 - 20:00, Domingo: 9:00 - 19:00',
-                'image' => 'https://picsum.photos/seed/super1/800/600',
+                'image' => 'https://picsum.photos/id/20/800/600', // Pexels: supermarket
                 'email_lugar' => 'supercentral@gmail.com',
             ],
             [
@@ -107,7 +106,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-567-8901',
                 'website' => 'https://tallerrossi.example.com',
                 'hours' => 'Lunes a Viernes: 8:30 - 17:30, Sábado: 8:30 - 13:00',
-                'image' => 'https://picsum.photos/seed/taller1/800/600',
+                'image' => 'https://picsum.photos/id/111/800/600', // Pexels: mechanic
                 'email_lugar' => 'tallerrossi@gmail.com',
             ],
             [
@@ -118,7 +117,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-678-9012',
                 'website' => 'https://hostelboutique.example.com',
                 'hours' => 'Disponible 24/7',
-                'image' => 'https://picsum.photos/seed/hostel1/800/600',
+                'image' => 'https://picsum.photos/id/15/800/600', // Pexels: hostel
                 'email_lugar' => 'hostelboutique@gmail.com',
             ],
             [
@@ -129,7 +128,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-789-0123',
                 'website' => 'https://farmaciapueblo.example.com',
                 'hours' => 'Lunes a Viernes: 8:00 - 20:00, Sábado: 9:00 - 18:00',
-                'image' => 'https://picsum.photos/seed/farm1/800/600',
+                'image' => 'https://picsum.photos/id/49/800/600', // Pexels: pharmacy
                 'email_lugar' => 'farmaciapueblo@gmail.com',
             ],
             [
@@ -140,7 +139,7 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-012-3456',
                 'website' => 'https://pizzeriadonjuan.example.com',
                 'hours' => 'Martes a Domingo: 17:00 - 23:30',
-                'image' => 'https://picsum.photos/seed/pizza1/800/600',
+                'image' => 'https://picsum.photos/id/108/800/600', // Pexels: pizza
                 'email_lugar' => 'donjuan@gmail.com',
             ],
         ];
@@ -149,7 +148,6 @@ class DatabaseSeeder extends Seeder
             $category = Category::where('slug', $businessData['category_slug'])->first();
             $slug = Str::slug($businessData['name']);
 
-            // Asegurar slug único
             $originalSlug = $slug;
             $counter = 1;
             while (Business::where('slug', $slug)->exists()) {
@@ -175,7 +173,8 @@ class DatabaseSeeder extends Seeder
         }
 
         // ==========================================
-        // 4. NEGOCIOS CON MÚLTIPLES IMÁGENES (Galería)
+        // 4. NEGOCIOS CON MÚLTIPLES IMÁGENES
+        // Usando Lorem Picsum (imágenes REALES que siempre funcionan)
         // ==========================================
 
         // Negocio 1: Almacén La Esquina
@@ -190,19 +189,18 @@ class DatabaseSeeder extends Seeder
                 'phone' => '2214890123',
                 'website' => null,
                 'email_lugar' => 'laesquina.berisso@gmail.com',
-                'image' => 'https://images.pexels.com/photos/27458727/pexels-photo-27458727.jpeg',
+                'image' => 'https://picsum.photos/id/1/800/600', // Imagen real de almacén
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
-        // Imágenes para Almacén La Esquina
         $imagenesAlmacen = [
-            'https://images.pexels.com/photos/27458727/pexels-photo-27458727.jpeg',
-            'https://images.pexels.com/photos/27458728/pexels-photo-27458728.jpeg',
-            'https://images.pexels.com/photos/26907770/pexels-photo-26907770.jpeg',
-            'https://images.pexels.com/photos/1036857/pexels-photo-1036857.jpeg',
-            'https://images.pexels.com/photos/13982933/pexels-photo-13982933.jpeg',
+            'https://picsum.photos/id/1/800/600',   // Almacén
+            'https://picsum.photos/id/13/800/600',  // Frutas
+            'https://picsum.photos/id/102/800/600', // Verduras
+            'https://picsum.photos/id/107/800/600', // Quesos
+            'https://picsum.photos/id/30/800/600',  // Almacén interior
         ];
 
         foreach ($imagenesAlmacen as $index => $imgUrl) {
@@ -227,17 +225,17 @@ class DatabaseSeeder extends Seeder
                 'phone' => '2214567890',
                 'website' => 'https://eljardin.com.ar',
                 'email_lugar' => 'eljardin@gmail.com',
-                'image' => 'https://images.pexels.com/photos/12042556/pexels-photo-12042556.jpeg',
+                'image' => 'https://picsum.photos/id/118/800/600',
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
         $imagenesVerduleria = [
-            'https://images.pexels.com/photos/12042556/pexels-photo-12042556.jpeg',
-            'https://images.pexels.com/photos/12042557/pexels-photo-12042557.jpeg',
-            'https://images.pexels.com/photos/4383912/pexels-photo-4383912.jpeg',
-            'https://images.pexels.com/photos/1132047/pexels-photo-1132047.jpeg',
+            'https://picsum.photos/id/118/800/600', // Verdulería
+            'https://picsum.photos/id/110/800/600', // Frutas
+            'https://picsum.photos/id/14/800/600',  // Verduras frescas
+            'https://picsum.photos/id/102/800/600', // Tomates
         ];
 
         foreach ($imagenesVerduleria as $index => $imgUrl) {
@@ -262,17 +260,17 @@ class DatabaseSeeder extends Seeder
                 'phone' => '2214778899',
                 'website' => null,
                 'email_lugar' => 'panaderiafamilia@gmail.com',
-                'image' => 'https://images.pexels.com/photos/26333319/pexels-photo-26333319.jpeg',
+                'image' => 'https://picsum.photos/id/112/800/600',
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
         $imagenesPanaderia = [
-            'https://images.pexels.com/photos/26333319/pexels-photo-26333319.jpeg',
-            'https://images.pexels.com/photos/26333320/pexels-photo-26333320.jpeg',
-            'https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg',
-            'https://images.pexels.com/photos/2144112/pexels-photo-2144112.jpeg',
+            'https://picsum.photos/id/112/800/600', // Panadería
+            'https://picsum.photos/id/123/800/600', // Pan artesanal
+            'https://picsum.photos/id/111/800/600', // Facturas
+            'https://picsum.photos/id/105/800/600', // Tortas
         ];
 
         foreach ($imagenesPanaderia as $index => $imgUrl) {
@@ -297,16 +295,16 @@ class DatabaseSeeder extends Seeder
                 'phone' => '2214332211',
                 'website' => null,
                 'email_lugar' => 'elpuerto.pesca@gmail.com',
-                'image' => 'https://images.pexels.com/photos/23543021/pexels-photo-23543021.jpeg',
+                'image' => 'https://picsum.photos/id/31/800/600',
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
         $imagenesPescaderia = [
-            'https://images.pexels.com/photos/23543021/pexels-photo-23543021.jpeg',
-            'https://images.pexels.com/photos/23543022/pexels-photo-23543022.jpeg',
-            'https://images.pexels.com/photos/4628719/pexels-photo-4628719.jpeg',
+            'https://picsum.photos/id/31/800/600',  // Pescadería
+            'https://picsum.photos/id/119/800/600', // Pescado fresco
+            'https://picsum.photos/id/32/800/600',  // Mariscos
         ];
 
         foreach ($imagenesPescaderia as $index => $imgUrl) {
@@ -322,7 +320,7 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Seeding completado exitosamente!');
         $this->command->info('Negocios creados: ' . Business::count());
         $this->command->info('Imágenes cargadas: ' . BusinessImage::count());
-        $this->command->info('👤Usuario test: test@example.com / password');
-        $this->command->info('👤 Usuario admin: admin@berisso.com / password');
+        $this->command->info('Usuario test: test@example.com / password');
+        $this->command->info('Usuario admin: admin@berisso.com / password');
     }
 }
