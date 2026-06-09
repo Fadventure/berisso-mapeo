@@ -17,22 +17,41 @@
     @else
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             @foreach($myBusinesses as $business)
-                <div class="rounded-3xl border border-marron-claro bg-white overflow-hidden shadow-sm shadow-marron-claro/80 transition hover:-translate-y-1">
+                {{-- Tarjeta con flexbox para mantener el botón abajo --}}
+                <div class="rounded-3xl border border-marron-claro bg-white overflow-hidden shadow-sm shadow-marron-claro/80 transition hover:-translate-y-1 flex flex-col h-full">
+                    
+                    {{-- Imagen - altura fija --}}
                     @if($business->image)
-                        <div class="h-40 w-full overflow-hidden">
-                            <img src="{{ $business->image }}" alt="{{ $business->name }}" class="h-full w-full object-cover" />
+                        <div class="h-40 w-full overflow-hidden flex-shrink-0">
+                            @php
+                                $imageSrc = null;
+                                if (Str::startsWith($business->image, ['http://', 'https://'])) {
+                                    $imageSrc = $business->image;
+                                } else {
+                                    $imageSrc = Storage::url($business->image);
+                                }
+                            @endphp
+                            <img src="{{ $imageSrc }}" alt="{{ $business->name }}" class="h-full w-full object-cover" />
                         </div>
                     @else
-                        <div class="h-40 w-full bg-piel flex items-center justify-center text-marron/60">
+                        <div class="h-40 w-full bg-piel flex items-center justify-center text-marron/60 flex-shrink-0">
                             Sin imagen
                         </div>
                     @endif
-                    <div class="p-4">
-                        <span class="text-xs text-marron/70">{{ $business->category?->name ?? 'Sin categoría' }}</span>
-                        <h3 class="mt-1 text-lg font-semibold text-marron-oscuro">{{ $business->name }}</h3>
-                        <p class="mt-2 text-sm text-marron/80 line-clamp-2">{{ $business->description ?? 'Sin descripción' }}</p>
-                        <div class="mt-4 flex gap-2">
-                            <a href="{{ route('businesses.show', $business) }}" class="flex-1 text-center rounded-xl bg-marron-claro px-3 py-2 text-sm font-medium text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
+                    
+                    {{-- Contenido - flex-grow para ocupar espacio disponible --}}
+                    <div class="p-4 flex flex-col flex-grow">
+                        <div>
+                            <span class="text-xs text-marron/70">{{ $business->category?->name ?? 'Sin categoría' }}</span>
+                            <h3 class="mt-1 text-lg font-semibold text-marron-oscuro">{{ $business->name }}</h3>
+                            
+                            {{-- Descripción --}}
+                            <p class="mt-2 text-sm text-marron/80 line-clamp-2">{{ $business->description ?? 'Sin descripción' }}</p>
+                        </div>
+                        
+                        {{-- Botón - mt-auto lo empuja al fondo --}}
+                        <div class="mt-auto pt-4">
+                            <a href="{{ route('businesses.show', $business) }}" class="block text-center rounded-xl bg-marron-claro px-3 py-2 text-sm font-medium text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
                                 Ver
                             </a>
                         </div>

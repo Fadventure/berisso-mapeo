@@ -73,27 +73,78 @@
                 @else
                     <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                         @foreach($businesses as $business)
-                            <article class="group overflow-hidden rounded-3xl border border-marron-claro bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-                                <div class="h-44 w-full overflow-hidden bg-piel-oscuro">
-                                    @if($business->image)
-                                        <img src="{{ $business->image }}" alt="{{ $business->name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
+                            <article class="group overflow-hidden rounded-3xl border border-marron-claro bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md flex flex-col h-full">
+                                <!-- Imagen - altura fija -->
+                                <div class="h-44 w-full overflow-hidden bg-piel-oscuro flex-shrink-0">
+                                    @php
+                                        $imageSrc = null;
+                                        if ($business->image) {
+                                            if (Str::startsWith($business->image, ['http://', 'https://'])) {
+                                                $imageSrc = $business->image;
+                                            } else {
+                                                $imageSrc = Storage::url($business->image);
+                                            }
+                                        }
+                                    @endphp
+                                    
+                                    @if($imageSrc)
+                                        <img src="{{ $imageSrc }}" alt="{{ $business->name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" />
                                     @else
-                                        <div class="flex h-full items-center justify-center bg-piel text-sm text-marron/80">Imagen no disponible</div>
+                                        <div class="flex h-full items-center justify-center bg-piel text-sm text-marron/60">Imagen no disponible</div>
                                     @endif
                                 </div>
-                                <div class="p-5">
-                                    <span class="inline-flex rounded-full border border-marron-claro bg-piel px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-marron-oscuro">{{ $business->category?->name ?? 'Sin categoría' }}</span>
-                                    <h3 class="mt-4 text-xl font-semibold text-marron-oscuro">{{ $business->name }}</h3>
-                                    <p class="mt-3 max-h-16 overflow-hidden text-sm leading-6 text-marron/80">{{ $business->description ?? 'Sin descripción disponible' }}</p>
+                                
+                                <!-- Contenido - flex-grow para que ocupe el espacio disponible -->
+                                <div class="p-5 flex flex-col flex-grow">
+                                    <div>
+                                        <span class="inline-flex rounded-full border border-marron-claro bg-piel px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-marron-oscuro">
+                                            {{ $business->category?->name ?? 'Sin categoría' }}
+                                        </span>
+                                        
+                                        <h3 class="mt-4 text-xl font-semibold text-marron-oscuro">{{ $business->name }}</h3>
+                                        
+                                        <p class="mt-3 max-h-16 overflow-hidden text-sm leading-6 text-marron/80">
+                                            {{ Str::limit($business->description ?? 'Sin descripción disponible', 100) }}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Información de contacto -->
                                     <div class="mt-5 space-y-2 text-sm text-marron/80">
-                                        @if($business->address)
-                                            <p><strong>Dirección:</strong> {{ $business->address }}</p>
+                                        @if($business->hours)
+                                            <p class="flex items-start gap-2">
+                                                <svg class="w-4 h-4 text-marron-medio mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                                <span class="line-clamp-2"><strong>Horario:</strong> {{ $business->hours }}</span>
+                                            </p>
                                         @endif
+                                        
+                                        @if($business->address)
+                                            <p class="flex items-start gap-2">
+                                                <svg class="w-4 h-4 text-marron-medio mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                </svg>
+                                                <span><strong>Dirección:</strong> {{ Str::limit($business->address, 40) }}</span>
+                                            </p>
+                                        @endif
+                                        
                                         @if($business->phone)
-                                            <p><strong>Teléfono:</strong> {{ $business->phone }}</p>
+                                            <p class="flex items-start gap-2">
+                                                <svg class="w-4 h-4 text-marron-medio mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                                </svg>
+                                                <span><strong>Teléfono:</strong> {{ $business->phone }}</span>
+                                            </p>
                                         @endif
                                     </div>
-                                    <a href="{{ route('businesses.show', $business) }}" class="mt-5 inline-flex rounded-2xl bg-marron-claro px-4 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">Ver más</a>
+                                    
+                                    <!-- Botón - mt-auto lo empuja al fondo -->
+                                    <div class="mt-auto pt-4">
+                                        <a href="{{ route('businesses.show', $business) }}" class="inline-flex w-full justify-center rounded-2xl bg-marron-claro px-4 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
+                                            Ver más
+                                        </a>
+                                    </div>
                                 </div>
                             </article>
                         @endforeach
