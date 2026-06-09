@@ -65,6 +65,8 @@ class BusinessController extends Controller
             'phone' => 'nullable|string|max:100',
             'website' => 'nullable|url|max:255',
             'email_lugar' => 'nullable|email|max:255',
+            'facebook' => 'nullable|url|max:255', 
+            'instagram' => 'nullable|url|max:255',
             'image' => 'nullable|url|max:255',
         ]);
 

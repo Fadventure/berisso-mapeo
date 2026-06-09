@@ -18,6 +18,8 @@ class Business extends Model
         'phone',
         'website',
         'email_lugar',
+        'facebook',
+        'instagram',
         'image', // imagen principal
         'user_id',
         'published'

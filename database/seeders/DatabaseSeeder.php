@@ -73,8 +73,10 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-123-4567',
                 'website' => 'https://lacostanera.example.com',
                 'hours' => 'Lunes a Domingo: 12:00 - 23:00',
-                'image' => 'https://picsum.photos/id/106/800/600', // Pexels: restaurant
+                'image' => 'https://picsum.photos/id/106/800/600',
                 'email_lugar' => 'lacostanera@gmail.com',
+                'facebook' => 'https://facebook.com/lacostanera',      // ← AGREGADO
+                'instagram' => 'https://instagram.com/lacostanera',   // ← AGREGADO
             ],
             [
                 'name' => 'Clínica Berisso',
@@ -84,8 +86,10 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-445-6789',
                 'website' => 'https://clinicaberisso.example.com',
                 'hours' => 'Lunes a Viernes: 8:00 - 18:00',
-                'image' => 'https://picsum.photos/id/48/800/600', // Pexels: medical
+                'image' => 'https://picsum.photos/id/48/800/600',
                 'email_lugar' => 'clinica@berisso.com',
+                'facebook' => null,                                    // ← AGREGADO (sin red social)
+                'instagram' => 'https://instagram.com/clinicaberisso', // ← AGREGADO
             ],
             [
                 'name' => 'Supermercado Central',
@@ -95,8 +99,10 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-234-5678',
                 'website' => 'https://supercentral.example.com',
                 'hours' => 'Lunes a Sábado: 8:00 - 20:00, Domingo: 9:00 - 19:00',
-                'image' => 'https://picsum.photos/id/20/800/600', // Pexels: supermarket
+                'image' => 'https://picsum.photos/id/20/800/600',
                 'email_lugar' => 'supercentral@gmail.com',
+                'facebook' => 'https://facebook.com/supercentral',     // ← AGREGADO
+                'instagram' => null,                                   // ← AGREGADO
             ],
             [
                 'name' => 'Taller Mecánico Rossi',
@@ -106,8 +112,10 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-567-8901',
                 'website' => 'https://tallerrossi.example.com',
                 'hours' => 'Lunes a Viernes: 8:30 - 17:30, Sábado: 8:30 - 13:00',
-                'image' => 'https://picsum.photos/id/111/800/600', // Pexels: mechanic
+                'image' => 'https://picsum.photos/id/111/800/600',
                 'email_lugar' => 'tallerrossi@gmail.com',
+                'facebook' => 'https://facebook.com/tallerrossi',      // ← AGREGADO
+                'instagram' => 'https://instagram.com/tallerrossi',    // ← AGREGADO
             ],
             [
                 'name' => 'Hostel Boutique Berisso',
@@ -117,8 +125,10 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-678-9012',
                 'website' => 'https://hostelboutique.example.com',
                 'hours' => 'Disponible 24/7',
-                'image' => 'https://picsum.photos/id/15/800/600', // Pexels: hostel
+                'image' => 'https://picsum.photos/id/15/800/600',
                 'email_lugar' => 'hostelboutique@gmail.com',
+                'facebook' => null,                                    // ← AGREGADO
+                'instagram' => null,                                   // ← AGREGADO
             ],
             [
                 'name' => 'Farmacia del Pueblo',
@@ -128,8 +138,10 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-789-0123',
                 'website' => 'https://farmaciapueblo.example.com',
                 'hours' => 'Lunes a Viernes: 8:00 - 20:00, Sábado: 9:00 - 18:00',
-                'image' => 'https://picsum.photos/id/49/800/600', // Pexels: pharmacy
+                'image' => 'https://picsum.photos/id/49/800/600',
                 'email_lugar' => 'farmaciapueblo@gmail.com',
+                'facebook' => 'https://facebook.com/farmaciapueblo',   // ← AGREGADO
+                'instagram' => 'https://instagram.com/farmaciapueblo', // ← AGREGADO
             ],
             [
                 'name' => 'Pizzería Don Juan',
@@ -139,8 +151,10 @@ class DatabaseSeeder extends Seeder
                 'phone' => '0221-012-3456',
                 'website' => 'https://pizzeriadonjuan.example.com',
                 'hours' => 'Martes a Domingo: 17:00 - 23:30',
-                'image' => 'https://picsum.photos/id/108/800/600', // Pexels: pizza
+                'image' => 'https://picsum.photos/id/108/800/600',
                 'email_lugar' => 'donjuan@gmail.com',
+                'facebook' => 'https://facebook.com/pizzeriadonjuan',  // ← AGREGADO
+                'instagram' => 'https://instagram.com/pizzeriadonjuan',// ← AGREGADO
             ],
         ];
 
@@ -167,6 +181,8 @@ class DatabaseSeeder extends Seeder
                     'hours' => $businessData['hours'],
                     'image' => $businessData['image'],
                     'email_lugar' => $businessData['email_lugar'],
+                    'facebook' => $businessData['facebook'],   // ← AGREGADO
+                    'instagram' => $businessData['instagram'], // ← AGREGADO
                     'published' => true,
                 ]
             );
@@ -174,7 +190,6 @@ class DatabaseSeeder extends Seeder
 
         // ==========================================
         // 4. NEGOCIOS CON MÚLTIPLES IMÁGENES
-        // Usando Lorem Picsum (imágenes REALES que siempre funcionan)
         // ==========================================
 
         // Negocio 1: Almacén La Esquina
@@ -189,18 +204,20 @@ class DatabaseSeeder extends Seeder
                 'phone' => '2214890123',
                 'website' => null,
                 'email_lugar' => 'laesquina.berisso@gmail.com',
-                'image' => 'https://picsum.photos/id/1/800/600', // Imagen real de almacén
+                'image' => 'https://picsum.photos/id/1/800/600',
+                'facebook' => 'https://facebook.com/almacenlaesquina',   // ← AGREGADO
+                'instagram' => 'https://instagram.com/almacenlaesquina', // ← AGREGADO
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
         $imagenesAlmacen = [
-            'https://picsum.photos/id/1/800/600',   // Almacén
-            'https://picsum.photos/id/13/800/600',  // Frutas
-            'https://picsum.photos/id/102/800/600', // Verduras
-            'https://picsum.photos/id/107/800/600', // Quesos
-            'https://picsum.photos/id/30/800/600',  // Almacén interior
+            'https://picsum.photos/id/1/800/600',
+            'https://picsum.photos/id/13/800/600',
+            'https://picsum.photos/id/102/800/600',
+            'https://picsum.photos/id/107/800/600',
+            'https://picsum.photos/id/30/800/600',
         ];
 
         foreach ($imagenesAlmacen as $index => $imgUrl) {
@@ -226,16 +243,18 @@ class DatabaseSeeder extends Seeder
                 'website' => 'https://eljardin.com.ar',
                 'email_lugar' => 'eljardin@gmail.com',
                 'image' => 'https://picsum.photos/id/118/800/600',
+                'facebook' => null,                                        // ← AGREGADO
+                'instagram' => 'https://instagram.com/verduleriaeljardin', // ← AGREGADO
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
         $imagenesVerduleria = [
-            'https://picsum.photos/id/118/800/600', // Verdulería
-            'https://picsum.photos/id/110/800/600', // Frutas
-            'https://picsum.photos/id/14/800/600',  // Verduras frescas
-            'https://picsum.photos/id/102/800/600', // Tomates
+            'https://picsum.photos/id/118/800/600',
+            'https://picsum.photos/id/110/800/600',
+            'https://picsum.photos/id/14/800/600',
+            'https://picsum.photos/id/102/800/600',
         ];
 
         foreach ($imagenesVerduleria as $index => $imgUrl) {
@@ -261,16 +280,18 @@ class DatabaseSeeder extends Seeder
                 'website' => null,
                 'email_lugar' => 'panaderiafamilia@gmail.com',
                 'image' => 'https://picsum.photos/id/112/800/600',
+                'facebook' => 'https://facebook.com/panaderiafamilia',   // ← AGREGADO
+                'instagram' => 'https://instagram.com/panaderiafamilia', // ← AGREGADO
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
         $imagenesPanaderia = [
-            'https://picsum.photos/id/112/800/600', // Panadería
-            'https://picsum.photos/id/123/800/600', // Pan artesanal
-            'https://picsum.photos/id/111/800/600', // Facturas
-            'https://picsum.photos/id/105/800/600', // Tortas
+            'https://picsum.photos/id/112/800/600',
+            'https://picsum.photos/id/123/800/600',
+            'https://picsum.photos/id/111/800/600',
+            'https://picsum.photos/id/105/800/600',
         ];
 
         foreach ($imagenesPanaderia as $index => $imgUrl) {
@@ -296,15 +317,17 @@ class DatabaseSeeder extends Seeder
                 'website' => null,
                 'email_lugar' => 'elpuerto.pesca@gmail.com',
                 'image' => 'https://picsum.photos/id/31/800/600',
+                'facebook' => 'https://facebook.com/pescaderiaelpuerto',   // ← AGREGADO
+                'instagram' => 'https://instagram.com/pescaderiaelpuerto', // ← AGREGADO
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
         );
 
         $imagenesPescaderia = [
-            'https://picsum.photos/id/31/800/600',  // Pescadería
-            'https://picsum.photos/id/119/800/600', // Pescado fresco
-            'https://picsum.photos/id/32/800/600',  // Mariscos
+            'https://picsum.photos/id/31/800/600',
+            'https://picsum.photos/id/119/800/600',
+            'https://picsum.photos/id/32/800/600',
         ];
 
         foreach ($imagenesPescaderia as $index => $imgUrl) {
@@ -317,10 +340,10 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $this->command->info('Seeding completado exitosamente!');
-        $this->command->info('Negocios creados: ' . Business::count());
-        $this->command->info('Imágenes cargadas: ' . BusinessImage::count());
-        $this->command->info('Usuario test: test@example.com / password');
-        $this->command->info('Usuario admin: admin@berisso.com / password');
+        $this->command->info(' Seeding completado exitosamente!');
+        $this->command->info(' Negocios creados: ' . Business::count());
+        $this->command->info(' Imágenes cargadas: ' . BusinessImage::count());
+        $this->command->info(' Usuario test: test@example.com / password');
+        $this->command->info(' Usuario admin: admin@berisso.com / password');
     }
 }

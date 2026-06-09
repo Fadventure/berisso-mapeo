@@ -21,7 +21,7 @@ return new class extends Migration
         'phone', 
         'website', 
         'image',
-        'email_lugar',  // Agregar esta línea
+        'email_lugar', 
         'user_id', 
         'slug', 
         'published'

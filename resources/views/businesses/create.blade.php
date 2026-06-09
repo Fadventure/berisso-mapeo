@@ -82,6 +82,26 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+                
+            </div>
+                        <div class="grid gap-6 lg:grid-cols-2">
+                <div>
+                    <label for="instagram" class="block text-sm font-medium text-marron-oscuro">Instagram</label>
+                    <input id="instagram" name="instagram" type="url" value="{{ old('instagram') }}"
+                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                    @error('instagram')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="facebook" class="block text-sm font-medium text-marron-oscuro">Facebook</label>
+                    <input id="facebook" name="facebook" type="url" value="{{ old('facebook') }}"
+                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                    @error('facebook')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
             <div class="grid gap-6 lg:grid-cols-2">
