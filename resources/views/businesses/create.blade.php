@@ -7,7 +7,7 @@
             <p class="mt-2 text-sm text-marron/80">Completa los datos para que tu comercio aparezca en el directorio.</p>
         </div>
 
-        <form method="POST" action="{{ route('businesses.store') }}" class="space-y-6">
+        <form method="POST" action="{{ route('businesses.store') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
             <div class="grid gap-6 lg:grid-cols-2">
@@ -82,9 +82,9 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                
             </div>
-                        <div class="grid gap-6 lg:grid-cols-2">
+
+            <div class="grid gap-6 lg:grid-cols-2">
                 <div>
                     <label for="instagram" class="block text-sm font-medium text-marron-oscuro">Instagram</label>
                     <input id="instagram" name="instagram" type="url" value="{{ old('instagram') }}"
@@ -114,21 +114,22 @@
                     @enderror
                 </div>
 
-                <div>
-                    <label for="image" class="block text-sm font-medium text-marron-oscuro">URL de la imagen</label>
-                    <input id="image" name="image" type="url" value="{{ old('image') }}"
-                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
-                    <p class="mt-2 text-sm text-marron/80">Agrega una imagen pública para que tu negocio se vea mejor.</p>
-                    @error('image')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                <!-- Opción 1: Subir archivo -->
+                <div class="mb-4">
+                    <label for="image_file" class="block text-sm font-medium text-marron-oscuro mb-1">
+                        📁 Subir imagen del local (archivo)
+                    </label>
+                    <input type="file" name="image_file" id="image_file" accept="image/jpeg,image/png,image/jpg,image/gif"
+                        class="w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron file:mr-3 file:rounded-xl file:border-0 file:bg-marron-claro file:px-4 file:py-2 file:text-sm file:font-semibold file:text-marron-oscuro hover:file:bg-marron-medio hover:file:text-white">
+                    <p class="text-xs text-marron/60 mt-1">Formatos: JPG, PNG, GIF (máx. 2MB)</p>
                 </div>
-            </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button type="submit" class="rounded-2xl bg-marron-claro px-6 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">Publicar negocio</button>
                 <a href="{{ route('home') }}" class="text-sm font-medium text-marron-oscuro underline hover:text-marron-medio">Volver al directorio</a>
             </div>
+            </div>
+
         </form>
     </div>
 @endsection

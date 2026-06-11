@@ -6,6 +6,7 @@ use App\Models\Business;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BusinessController extends Controller
@@ -41,10 +42,9 @@ class BusinessController extends Controller
         return view('businesses.index', compact('businesses', 'categories', 'selectedCategory'));
     }
 
-    // ← UN SOLO método show() - Este es el correcto
     public function show(Business $business)
     {
-        $business->load(['category', 'user', 'images']); // Carga las imágenes también
+        $business->load(['category', 'user', 'images']);
         return view('businesses.show', compact('business'));
     }
 
@@ -56,6 +56,7 @@ class BusinessController extends Controller
 
     public function store(Request $request)
     {
+        // Validación actualizada: ahora acepta archivo o URL
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -67,8 +68,21 @@ class BusinessController extends Controller
             'email_lugar' => 'nullable|email|max:255',
             'facebook' => 'nullable|url|max:255', 
             'instagram' => 'nullable|url|max:255',
-            'image' => 'nullable|url|max:255',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // NUEVO: archivo local
+            'image_url' => 'nullable|url|max:255',  // NUEVO: URL externa
         ]);
+
+        // Procesar la imagen: prioridad al archivo subido
+        if ($request->hasFile('image_file')) {
+            // Guardar el archivo y obtener su ruta
+            $path = $request->file('image_file')->store('businesses', 'public');
+            $data['image'] = $path;
+        } elseif ($request->filled('image_url')) {
+            // Usar la URL proporcionada
+            $data['image'] = $request->input('image_url');
+        } else {
+            $data['image'] = null;
+        }
 
         $data['user_id'] = Auth::id();
         $data['slug'] = $this->makeUniqueSlug($data['name']);

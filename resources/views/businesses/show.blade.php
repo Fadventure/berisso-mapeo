@@ -6,11 +6,23 @@
     <div class="rounded-3xl border border-marron-claro bg-white shadow-sm shadow-marron-claro/80 overflow-hidden">
         @php
             $allImages = collect();
+            
+            // Procesar imagen principal del negocio
             if($business->image) {
-                $allImages->push($business->image);
+                if (Str::startsWith($business->image, ['http://', 'https://'])) {
+                    $allImages->push($business->image);
+                } else {
+                    $allImages->push(Storage::url($business->image));
+                }
             }
+            
+            // Procesar imágenes adicionales de la galería
             foreach($business->images as $img) {
-                $allImages->push($img->image_url);
+                if (Str::startsWith($img->image_url, ['http://', 'https://'])) {
+                    $allImages->push($img->image_url);
+                } else {
+                    $allImages->push(Storage::url($img->image_url));
+                }
             }
             $allImages = $allImages->unique();
         @endphp
@@ -27,8 +39,8 @@
                     <div class="flex gap-2 p-3 overflow-x-auto bg-white border-t border-marron-claro">
                         @foreach($allImages as $index => $imgUrl)
                             <button 
-                                onclick="document.getElementById('mainImage').src = '{{ $imgUrl }}'"
-                                class="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all {{ $index === 0 ? 'border-marron-medio' : 'border-marron-claro hover:border-marron-medio' }}">
+                                onclick="document.getElementById('mainImage').src = '{{ $imgUrl }}'; updateActiveThumbnail(this)"
+                                class="thumbnail-btn flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all {{ $index === 0 ? 'border-marron-medio' : 'border-marron-claro hover:border-marron-medio' }}">
                                 <img src="{{ $imgUrl }}" alt="Miniatura {{ $index + 1 }}" class="w-full h-full object-cover" />
                             </button>
                         @endforeach
@@ -198,15 +210,13 @@
 </div>
 
 <script>
-    function changeImage(src) {
-        document.getElementById('mainImage').src = src;
-        // Actualizar borde activo en miniaturas
+    function updateActiveThumbnail(clickedButton) {
         document.querySelectorAll('.thumbnail-btn').forEach(btn => {
             btn.classList.remove('border-marron-medio');
             btn.classList.add('border-marron-claro');
         });
-        event.currentTarget.classList.remove('border-marron-claro');
-        event.currentTarget.classList.add('border-marron-medio');
+        clickedButton.classList.remove('border-marron-claro');
+        clickedButton.classList.add('border-marron-medio');
     }
 </script>
 @endsection
