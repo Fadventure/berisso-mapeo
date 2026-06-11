@@ -62,9 +62,53 @@ class DatabaseSeeder extends Seeder
         }
 
         // ==========================================
-        // 3. NEGOCIOS BÁSICOS (con imágenes funcionales)
+        // 3. FUNCIÓN AUXILIAR PARA CREAR NEGOCIO CON GALERÍA
         // ==========================================
-        $basicBusinesses = [
+        $createBusinessWithGallery = function($businessData, $user, $extraImages = []) {
+            $category = Category::where('slug', $businessData['category_slug'])->first();
+            $slug = Str::slug($businessData['name']);
+            
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Business::where('slug', $slug)->exists()) {
+                $slug = $originalSlug . '-' . $counter++;
+            }
+            
+            $business = Business::create([
+                'user_id' => $user->id,
+                'name' => $businessData['name'],
+                'slug' => $slug,
+                'category_id' => $category?->id,
+                'description' => $businessData['description'],
+                'address' => $businessData['address'],
+                'phone' => $businessData['phone'],
+                'website' => $businessData['website'] ?? null,
+                'hours' => $businessData['hours'],
+                'image' => $businessData['image'],
+                'email_lugar' => $businessData['email_lugar'],
+                'facebook' => $businessData['facebook'] ?? null,
+                'instagram' => $businessData['instagram'] ?? null,
+                'published' => true,
+            ]);
+            
+            // Agregar imágenes extras
+            foreach ($extraImages as $index => $imgUrl) {
+                BusinessImage::create([
+                    'business_id' => $business->id,
+                    'image_url' => $imgUrl,
+                    'order' => $index,
+                ]);
+            }
+            
+            return $business;
+        };
+
+        // ==========================================
+        // 4. TODOS LOS NEGOCIOS CON IMÁGENES EXTRAS
+        // ==========================================
+
+        // Negocio 1: Restaurante La Costanera
+        $createBusinessWithGallery(
             [
                 'name' => 'Restaurante La Costanera',
                 'category_slug' => 'gastronomia',
@@ -75,9 +119,19 @@ class DatabaseSeeder extends Seeder
                 'hours' => 'Lunes a Domingo: 12:00 - 23:00',
                 'image' => 'https://picsum.photos/id/106/800/600',
                 'email_lugar' => 'lacostanera@gmail.com',
-                'facebook' => 'https://facebook.com/lacostanera',      // ← AGREGADO
-                'instagram' => 'https://instagram.com/lacostanera',   // ← AGREGADO
+                'facebook' => 'https://facebook.com/lacostanera',
+                'instagram' => 'https://instagram.com/lacostanera',
             ],
+            $user,
+            [
+                'https://picsum.photos/id/106/800/601',
+                'https://picsum.photos/id/106/800/602',
+                'https://picsum.photos/id/106/800/603',
+            ]
+        );
+
+        // Negocio 2: Clínica Berisso
+        $createBusinessWithGallery(
             [
                 'name' => 'Clínica Berisso',
                 'category_slug' => 'salud',
@@ -88,9 +142,19 @@ class DatabaseSeeder extends Seeder
                 'hours' => 'Lunes a Viernes: 8:00 - 18:00',
                 'image' => 'https://picsum.photos/id/48/800/600',
                 'email_lugar' => 'clinica@berisso.com',
-                'facebook' => null,                                    // ← AGREGADO (sin red social)
-                'instagram' => 'https://instagram.com/clinicaberisso', // ← AGREGADO
+                'facebook' => null,
+                'instagram' => 'https://instagram.com/clinicaberisso',
             ],
+            $user,
+            [
+                'https://picsum.photos/id/48/800/601',
+                'https://picsum.photos/id/48/800/602',
+                'https://picsum.photos/id/48/800/603',
+            ]
+        );
+
+        // Negocio 3: Supermercado Central
+        $createBusinessWithGallery(
             [
                 'name' => 'Supermercado Central',
                 'category_slug' => 'comercio',
@@ -101,9 +165,20 @@ class DatabaseSeeder extends Seeder
                 'hours' => 'Lunes a Sábado: 8:00 - 20:00, Domingo: 9:00 - 19:00',
                 'image' => 'https://picsum.photos/id/20/800/600',
                 'email_lugar' => 'supercentral@gmail.com',
-                'facebook' => 'https://facebook.com/supercentral',     // ← AGREGADO
-                'instagram' => null,                                   // ← AGREGADO
+                'facebook' => 'https://facebook.com/supercentral',
+                'instagram' => null,
             ],
+            $user,
+            [
+                'https://picsum.photos/id/20/800/601',
+                'https://picsum.photos/id/20/800/602',
+                'https://picsum.photos/id/20/800/603',
+                'https://picsum.photos/id/20/800/604',
+            ]
+        );
+
+        // Negocio 4: Taller Mecánico Rossi
+        $createBusinessWithGallery(
             [
                 'name' => 'Taller Mecánico Rossi',
                 'category_slug' => 'servicios',
@@ -114,9 +189,18 @@ class DatabaseSeeder extends Seeder
                 'hours' => 'Lunes a Viernes: 8:30 - 17:30, Sábado: 8:30 - 13:00',
                 'image' => 'https://picsum.photos/id/111/800/600',
                 'email_lugar' => 'tallerrossi@gmail.com',
-                'facebook' => 'https://facebook.com/tallerrossi',      // ← AGREGADO
-                'instagram' => 'https://instagram.com/tallerrossi',    // ← AGREGADO
+                'facebook' => 'https://facebook.com/tallerrossi',
+                'instagram' => 'https://instagram.com/tallerrossi',
             ],
+            $user,
+            [
+                'https://picsum.photos/id/111/800/601',
+                'https://picsum.photos/id/111/800/602',
+            ]
+        );
+
+        // Negocio 5: Hostel Boutique Berisso
+        $createBusinessWithGallery(
             [
                 'name' => 'Hostel Boutique Berisso',
                 'category_slug' => 'turismo',
@@ -127,9 +211,21 @@ class DatabaseSeeder extends Seeder
                 'hours' => 'Disponible 24/7',
                 'image' => 'https://picsum.photos/id/15/800/600',
                 'email_lugar' => 'hostelboutique@gmail.com',
-                'facebook' => null,                                    // ← AGREGADO
-                'instagram' => null,                                   // ← AGREGADO
+                'facebook' => null,
+                'instagram' => null,
             ],
+            $user,
+            [
+                'https://picsum.photos/id/15/800/601',
+                'https://picsum.photos/id/15/800/602',
+                'https://picsum.photos/id/15/800/603',
+                'https://picsum.photos/id/15/800/604',
+                'https://picsum.photos/id/15/800/605',
+            ]
+        );
+
+        // Negocio 6: Farmacia del Pueblo
+        $createBusinessWithGallery(
             [
                 'name' => 'Farmacia del Pueblo',
                 'category_slug' => 'salud',
@@ -140,9 +236,18 @@ class DatabaseSeeder extends Seeder
                 'hours' => 'Lunes a Viernes: 8:00 - 20:00, Sábado: 9:00 - 18:00',
                 'image' => 'https://picsum.photos/id/49/800/600',
                 'email_lugar' => 'farmaciapueblo@gmail.com',
-                'facebook' => 'https://facebook.com/farmaciapueblo',   // ← AGREGADO
-                'instagram' => 'https://instagram.com/farmaciapueblo', // ← AGREGADO
+                'facebook' => 'https://facebook.com/farmaciapueblo',
+                'instagram' => 'https://instagram.com/farmaciapueblo',
             ],
+            $user,
+            [
+                'https://picsum.photos/id/49/800/601',
+                'https://picsum.photos/id/49/800/602',
+            ]
+        );
+
+        // Negocio 7: Pizzería Don Juan
+        $createBusinessWithGallery(
             [
                 'name' => 'Pizzería Don Juan',
                 'category_slug' => 'gastronomia',
@@ -153,46 +258,18 @@ class DatabaseSeeder extends Seeder
                 'hours' => 'Martes a Domingo: 17:00 - 23:30',
                 'image' => 'https://picsum.photos/id/108/800/600',
                 'email_lugar' => 'donjuan@gmail.com',
-                'facebook' => 'https://facebook.com/pizzeriadonjuan',  // ← AGREGADO
-                'instagram' => 'https://instagram.com/pizzeriadonjuan',// ← AGREGADO
+                'facebook' => 'https://facebook.com/pizzeriadonjuan',
+                'instagram' => 'https://instagram.com/pizzeriadonjuan',
             ],
-        ];
+            $user,
+            [
+                'https://picsum.photos/id/108/800/601',
+                'https://picsum.photos/id/108/800/602',
+                'https://picsum.photos/id/108/800/603',
+            ]
+        );
 
-        foreach ($basicBusinesses as $businessData) {
-            $category = Category::where('slug', $businessData['category_slug'])->first();
-            $slug = Str::slug($businessData['name']);
-
-            $originalSlug = $slug;
-            $counter = 1;
-            while (Business::where('slug', $slug)->exists()) {
-                $slug = $originalSlug . '-' . $counter++;
-            }
-
-            Business::firstOrCreate(
-                ['slug' => $slug],
-                [
-                    'user_id' => $user->id,
-                    'name' => $businessData['name'],
-                    'category_id' => $category?->id,
-                    'description' => $businessData['description'],
-                    'address' => $businessData['address'],
-                    'phone' => $businessData['phone'],
-                    'website' => $businessData['website'],
-                    'hours' => $businessData['hours'],
-                    'image' => $businessData['image'],
-                    'email_lugar' => $businessData['email_lugar'],
-                    'facebook' => $businessData['facebook'],   // ← AGREGADO
-                    'instagram' => $businessData['instagram'], // ← AGREGADO
-                    'published' => true,
-                ]
-            );
-        }
-
-        // ==========================================
-        // 4. NEGOCIOS CON MÚLTIPLES IMÁGENES
-        // ==========================================
-
-        // Negocio 1: Almacén La Esquina
+        // Negocio 8: Almacén La Esquina (con adminUser)
         $business1 = Business::firstOrCreate(
             ['slug' => 'almacen-la-esquina'],
             [
@@ -205,8 +282,8 @@ class DatabaseSeeder extends Seeder
                 'website' => null,
                 'email_lugar' => 'laesquina.berisso@gmail.com',
                 'image' => 'https://picsum.photos/id/1/800/600',
-                'facebook' => 'https://facebook.com/almacenlaesquina',   // ← AGREGADO
-                'instagram' => 'https://instagram.com/almacenlaesquina', // ← AGREGADO
+                'facebook' => 'https://facebook.com/almacenlaesquina',
+                'instagram' => 'https://instagram.com/almacenlaesquina',
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
@@ -230,7 +307,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        // Negocio 2: Verdulería El Jardín
+        // Negocio 9: Verdulería El Jardín
         $business2 = Business::firstOrCreate(
             ['slug' => 'verduleria-el-jardin'],
             [
@@ -243,8 +320,8 @@ class DatabaseSeeder extends Seeder
                 'website' => 'https://eljardin.com.ar',
                 'email_lugar' => 'eljardin@gmail.com',
                 'image' => 'https://picsum.photos/id/118/800/600',
-                'facebook' => null,                                        // ← AGREGADO
-                'instagram' => 'https://instagram.com/verduleriaeljardin', // ← AGREGADO
+                'facebook' => null,
+                'instagram' => 'https://instagram.com/verduleriaeljardin',
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
@@ -267,7 +344,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        // Negocio 3: Panadería La Familia
+        // Negocio 10: Panadería La Familia
         $business3 = Business::firstOrCreate(
             ['slug' => 'panaderia-la-familia'],
             [
@@ -280,8 +357,8 @@ class DatabaseSeeder extends Seeder
                 'website' => null,
                 'email_lugar' => 'panaderiafamilia@gmail.com',
                 'image' => 'https://picsum.photos/id/112/800/600',
-                'facebook' => 'https://facebook.com/panaderiafamilia',   // ← AGREGADO
-                'instagram' => 'https://instagram.com/panaderiafamilia', // ← AGREGADO
+                'facebook' => 'https://facebook.com/panaderiafamilia',
+                'instagram' => 'https://instagram.com/panaderiafamilia',
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
@@ -304,7 +381,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        // Negocio 4: Pescadería El Puerto
+        // Negocio 11: Pescadería El Puerto
         $business4 = Business::firstOrCreate(
             ['slug' => 'pescaderia-el-puerto'],
             [
@@ -317,8 +394,8 @@ class DatabaseSeeder extends Seeder
                 'website' => null,
                 'email_lugar' => 'elpuerto.pesca@gmail.com',
                 'image' => 'https://picsum.photos/id/31/800/600',
-                'facebook' => 'https://facebook.com/pescaderiaelpuerto',   // ← AGREGADO
-                'instagram' => 'https://instagram.com/pescaderiaelpuerto', // ← AGREGADO
+                'facebook' => 'https://facebook.com/pescaderiaelpuerto',
+                'instagram' => 'https://instagram.com/pescaderiaelpuerto',
                 'user_id' => $adminUser->id,
                 'published' => true,
             ]
@@ -340,10 +417,10 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $this->command->info(' Seeding completado exitosamente!');
-        $this->command->info(' Negocios creados: ' . Business::count());
-        $this->command->info(' Imágenes cargadas: ' . BusinessImage::count());
-        $this->command->info(' Usuario test: test@example.com / password');
-        $this->command->info(' Usuario admin: admin@berisso.com / password');
+        $this->command->info('✅ Seeding completado exitosamente!');
+        $this->command->info('📊 Negocios creados: ' . Business::count());
+        $this->command->info('🖼️ Imágenes cargadas: ' . BusinessImage::count());
+        $this->command->info('👤 Usuario test: test@example.com / password');
+        $this->command->info('👤 Usuario admin: admin@berisso.com / password');
     }
 }

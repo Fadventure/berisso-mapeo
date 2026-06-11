@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\BusinessImage;
 use Illuminate\Support\Str;
 
 class BusinessController extends Controller
@@ -56,7 +57,7 @@ class BusinessController extends Controller
 
     public function store(Request $request)
     {
-        // Validación actualizada: ahora acepta archivo o URL
+        // Validación
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -68,18 +69,18 @@ class BusinessController extends Controller
             'email_lugar' => 'nullable|email|max:255',
             'facebook' => 'nullable|url|max:255', 
             'instagram' => 'nullable|url|max:255',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // NUEVO: archivo local
-            'image_url' => 'nullable|url|max:255',  // NUEVO: URL externa
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'main_image_url' => 'nullable|url|max:255',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_urls.*' => 'nullable|url|max:255',
         ]);
 
-        // Procesar la imagen: prioridad al archivo subido
-        if ($request->hasFile('image_file')) {
-            // Guardar el archivo y obtener su ruta
-            $path = $request->file('image_file')->store('businesses', 'public');
+        // Procesar imagen principal
+        if ($request->hasFile('main_image')) {
+            $path = $request->file('main_image')->store('businesses', 'public');
             $data['image'] = $path;
-        } elseif ($request->filled('image_url')) {
-            // Usar la URL proporcionada
-            $data['image'] = $request->input('image_url');
+        } elseif ($request->filled('main_image_url')) {
+            $data['image'] = $request->input('main_image_url');
         } else {
             $data['image'] = null;
         }
@@ -87,10 +88,32 @@ class BusinessController extends Controller
         $data['user_id'] = Auth::id();
         $data['slug'] = $this->makeUniqueSlug($data['name']);
 
-        Business::create($data);
+        // Crear el negocio
+        $business = Business::create($data);
+
+        // Procesar galería de imágenes extras
+        $galleryImages = [];
+
+        // Procesar archivos subidos
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $file) {
+                if ($file) {
+                    $galleryImages[] = $file->store('businesses/gallery', 'public');
+                }
+            }
+        }
+
+        // Guardar en la tabla business_images
+        foreach ($galleryImages as $index => $imageUrl) {
+            BusinessImage::create([
+                'business_id' => $business->id,
+                'image_url' => $imageUrl,
+                'order' => $index,
+            ]);
+        }
 
         return redirect()->route('home')
-            ->with('success', 'Tu negocio se publicó correctamente.');
+            ->with('success', 'Tu negocio se publicó correctamente con ' . count($galleryImages) . ' imágenes extras.');
     }
 
     protected function makeUniqueSlug(string $name): string
