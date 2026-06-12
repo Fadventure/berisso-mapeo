@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Business;
+use App\Models\BusinessImage;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\BusinessImage;
 use Illuminate\Support\Str;
 
 class BusinessController extends Controller
@@ -57,12 +57,14 @@ class BusinessController extends Controller
 
     public function store(Request $request)
     {
-        // Validación
+        // Validación con coordenadas incluidas
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string|max:2000',
             'address' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'hours' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:100',
             'website' => 'nullable|url|max:255',
@@ -88,7 +90,7 @@ class BusinessController extends Controller
         $data['user_id'] = Auth::id();
         $data['slug'] = $this->makeUniqueSlug($data['name']);
 
-        // Crear el negocio
+        // Crear el negocio (incluye latitude y longitude automáticamente)
         $business = Business::create($data);
 
         // Procesar galería de imágenes extras
@@ -97,8 +99,17 @@ class BusinessController extends Controller
         // Procesar archivos subidos
         if ($request->hasFile('gallery_images')) {
             foreach ($request->file('gallery_images') as $file) {
-                if ($file) {
+                if ($file && $file->isValid()) {
                     $galleryImages[] = $file->store('businesses/gallery', 'public');
+                }
+            }
+        }
+
+        // Procesar URLs de galería
+        if ($request->filled('gallery_urls')) {
+            foreach ($request->input('gallery_urls') as $url) {
+                if ($url && filter_var($url, FILTER_VALIDATE_URL)) {
+                    $galleryImages[] = $url;
                 }
             }
         }
@@ -112,8 +123,15 @@ class BusinessController extends Controller
             ]);
         }
 
-        return redirect()->route('home')
-            ->with('success', 'Tu negocio se publicó correctamente con ' . count($galleryImages) . ' imágenes extras.');
+        $message = '¡Tu negocio se publicó correctamente!';
+        if (count($galleryImages) > 0) {
+            $message .= ' Se agregaron ' . count($galleryImages) . ' imágenes extras.';
+        }
+        if ($request->filled('latitude') && $request->filled('longitude')) {
+            $message .= ' La ubicación se guardó con precisión.';
+        }
+
+        return redirect()->route('home')->with('success', $message);
     }
 
     protected function makeUniqueSlug(string $name): string

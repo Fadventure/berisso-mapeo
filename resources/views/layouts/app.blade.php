@@ -9,6 +9,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 </head>
+@stack('scripts')
 <body class="min-h-screen bg-piel text-marron-texto font-medium">
     <!-- Cambié 'text-marron' por 'text-marron-texto' y agregué 'font-medium' -->
     <div class="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(210,180,140,0.15),_transparent_40%),_linear-gradient(#FDF8F0,_#F5EADD)]">

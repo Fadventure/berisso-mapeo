@@ -14,6 +14,8 @@ class Business extends Model
         'category_id',
         'description',
         'address',
+        'longitude',
+        'latitude',
         'hours',
         'phone',
         'website',
