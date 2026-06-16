@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
+         $this->call(AdminUserSeeder::class);
         // ==========================================
         // 1. CREAR USUARIO DE PRUEBA
         // ==========================================
@@ -34,7 +35,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
             ]
         );
-
+        
         // ==========================================
         // 2. CREAR CATEGORÍAS
         // ==========================================

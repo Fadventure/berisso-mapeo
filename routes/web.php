@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessController;
 use Illuminate\Support\Facades\Route;
@@ -27,3 +28,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/dashboard', [AuthController::class, 'dashboard'])
     ->middleware('auth')
     ->name('dashboard');
+
+// ==========================================
+// RUTAS DE ADMINISTRACIÓN
+// ==========================================
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/businesses/{business}', [App\Http\Controllers\AdminController::class, 'show'])->name('businesses.show');
+    Route::patch('/businesses/{business}/approve', [App\Http\Controllers\AdminController::class, 'approve'])->name('businesses.approve');
+    Route::patch('/businesses/{business}/reject', [App\Http\Controllers\AdminController::class, 'reject'])->name('businesses.reject');
+});

@@ -14,7 +14,10 @@ class BusinessController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Business::with('category');
+        // SOLO NEGOCIOS APROBADOS Y PUBLICADOS
+        $query = Business::with('category')
+            ->where('status', 'approved')
+            ->where('published', true);
 
         if ($request->filled('search')) {
             $search = $request->query('search');
@@ -33,8 +36,7 @@ class BusinessController extends Controller
             }
         }
 
-        $businesses = $query->where('published', true)
-            ->orderBy('created_at', 'desc')
+        $businesses = $query->orderBy('created_at', 'desc')
             ->paginate(12)
             ->withQueryString();
 
@@ -45,6 +47,11 @@ class BusinessController extends Controller
 
     public function show(Business $business)
     {
+        // Si el negocio no está aprobado, mostrar error 404
+        if ($business->status !== 'approved' || !$business->published) {
+            abort(404, 'Este negocio no está disponible.');
+        }
+        
         $business->load(['category', 'user', 'images']);
         return view('businesses.show', compact('business'));
     }
@@ -89,8 +96,12 @@ class BusinessController extends Controller
 
         $data['user_id'] = Auth::id();
         $data['slug'] = $this->makeUniqueSlug($data['name']);
+        
+        // NUEVO: El negocio se crea como PENDIENTE (no visible al público)
+        $data['status'] = 'pending';
+        $data['published'] = false;
 
-        // Crear el negocio (incluye latitude y longitude automáticamente)
+        // Crear el negocio
         $business = Business::create($data);
 
         // Procesar galería de imágenes extras
@@ -123,12 +134,10 @@ class BusinessController extends Controller
             ]);
         }
 
-        $message = '¡Tu negocio se publicó correctamente!';
+        // Mensaje actualizado: avisa que está en revisión
+        $message = '✅ ¡Tu negocio fue enviado para revisión! Un administrador lo verificará y lo publicará pronto.';
         if (count($galleryImages) > 0) {
             $message .= ' Se agregaron ' . count($galleryImages) . ' imágenes extras.';
-        }
-        if ($request->filled('latitude') && $request->filled('longitude')) {
-            $message .= ' La ubicación se guardó con precisión.';
         }
 
         return redirect()->route('home')->with('success', $message);
