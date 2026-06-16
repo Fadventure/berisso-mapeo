@@ -92,7 +92,7 @@
             <!-- ========================================== -->
             <!-- SELECTOR DE HORARIOS - Opción 2 -->
             <!-- ========================================== -->
-            <div class="border-t border-marron-claro pt-6">
+
                 <h3 class="text-lg font-semibold text-marron-oscuro mb-4">🕐 Horario de atención</h3>
                 <p class="text-sm text-marron/80 mb-4">Seleccioná los días y horarios de atención.</p>
 
@@ -166,7 +166,7 @@
 
                     <input type="hidden" name="hours" id="hours-input" value="{{ old('hours') }}">
                 </div>
-            </div>
+
 
             <!-- ========================================== -->
             <!-- DATOS DE CONTACTO Y REDES SOCIALES -->
@@ -214,10 +214,10 @@
             <!-- ========================================== -->
             <!-- IMÁGENES -->
             <!-- ========================================== -->
-            <div class="border-t border-marron-claro pt-6">
-                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">📸 Imagen principal</h3>
+
+                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">Imagen principal del negocio</h3>
                 <div>
-                    <label class="block text-sm font-medium text-marron-oscuro mb-1">Subir imagen principal</label>
+                    <label class="block text-sm font-medium text-marron-oscuro mb-1">Subir imagen</label>
                     <input type="file" name="main_image" accept="image/jpeg,image/png,image/jpg,image/gif"
                         class="w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron file:mr-3 file:rounded-xl file:border-0 file:bg-marron-claro file:px-4 file:py-2 file:text-sm file:font-semibold file:text-marron-oscuro hover:file:bg-marron-medio hover:file:text-white">
                     <p class="text-xs text-marron/60 mt-1">Formatos: JPG, PNG, GIF (máx. 2MB)</p>
@@ -225,10 +225,10 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-            </div>
 
-            <div class="border-t border-marron-claro pt-6">
-                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">🖼️ Galería de imágenes (opcional)</h3>
+
+
+                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">Galería de imágenes (opcional)</h3>
                 <div id="gallery-container">
                     <div class="gallery-item mb-4 p-4 border border-marron-claro rounded-2xl bg-piel/30">
                         <div class="flex justify-between items-center mb-3">
@@ -250,7 +250,7 @@
                 @error('gallery_images.*')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-            </div>
+
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center pt-4">
                 <button type="submit" class="rounded-2xl bg-marron-claro px-6 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
