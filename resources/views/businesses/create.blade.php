@@ -89,6 +89,88 @@
                 </p>
             </div>
 
+            <!-- ========================================== -->
+            <!-- SELECTOR DE HORARIOS - Opción 2 -->
+            <!-- ========================================== -->
+            <div class="border-t border-marron-claro pt-6">
+                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">🕐 Horario de atención</h3>
+                <p class="text-sm text-marron/80 mb-4">Seleccioná los días y horarios de atención.</p>
+
+                <div class="space-y-4">
+                    <!-- Días de la semana -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                        @php
+                            $dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+                            $diasAbreviados = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+                            $horariosGuardados = old('horarios', []);
+                        @endphp
+                        
+                        @foreach($dias as $index => $dia)
+                            <label class="flex items-center gap-2 text-sm text-marron-oscuro bg-piel/50 px-3 py-2 rounded-xl border border-marron-claro cursor-pointer hover:bg-piel">
+                                <input type="checkbox" name="dias_seleccionados[]" value="{{ $dia }}" 
+                                    class="rounded border-marron-claro text-marron-medio focus:ring-marron-claro/30"
+                                    {{ in_array($dia, old('dias_seleccionados', [])) ? 'checked' : '' }}
+                                    onchange="toggleDia(this, '{{ $dia }}')">
+                                <span>{{ $dia }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+
+                    <!-- Contenedor de horarios por día -->
+                    <div id="horarios-container" class="space-y-4 mt-4">
+                        @foreach($dias as $index => $dia)
+                            <div id="dia-{{ Str::slug($dia) }}" class="dia-container hidden border border-marron-claro rounded-2xl p-4 bg-piel/20">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="font-semibold text-marron-oscuro">{{ $dia }}</h4>
+                                    <button type="button" class="text-sm text-red-500 hover:text-red-700" onclick="eliminarDia('{{ Str::slug($dia) }}')">
+                                        Eliminar día
+                                    </button>
+                                </div>
+                                
+                                <div class="turnos-container space-y-3" id="turnos-{{ Str::slug($dia) }}">
+                                    <!-- Turno 1 (siempre presente) -->
+                                    <div class="turno-item grid grid-cols-2 gap-3 items-end">
+                                        <div>
+                                            <label class="block text-xs font-medium text-marron-oscuro mb-1">Desde</label>
+                                            <input type="time" name="horarios[{{ $dia }}][turnos][0][desde]" 
+                                                value="{{ old("horarios.{$dia}.turnos.0.desde", '09:00') }}"
+                                                class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-medium text-marron-oscuro mb-1">Hasta</label>
+                                            <input type="time" name="horarios[{{ $dia }}][turnos][0][hasta]" 
+                                                value="{{ old("horarios.{$dia}.turnos.0.hasta", '13:00') }}"
+                                                class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="mt-3 text-sm text-marron-oscuro hover:text-marron-medio underline" 
+                                    onclick="agregarTurno('{{ Str::slug($dia) }}')">
+                                    + Agregar turno
+                                </button>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Opción 24hs -->
+                    <div class="mt-4">
+                        <label class="flex items-center gap-2 text-sm text-marron-oscuro">
+                            <input type="checkbox" name="abierto_24hs" value="1" 
+                                class="rounded border-marron-claro text-marron-medio focus:ring-marron-claro/30"
+                                {{ old('abierto_24hs') ? 'checked' : '' }}
+                                onchange="toggle24hs(this)">
+                            <span>🕛 Abierto 24 horas (ej: Farmacia de turno)</span>
+                        </label>
+                    </div>
+
+                    <input type="hidden" name="hours" id="hours-input" value="{{ old('hours') }}">
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- DATOS DE CONTACTO Y REDES SOCIALES -->
+            <!-- ========================================== -->
             <div class="grid gap-6 lg:grid-cols-2">
                 <div>
                     <label for="website" class="block text-sm font-medium text-marron-oscuro">Página web</label>
@@ -129,18 +211,13 @@
                 </div>
             </div>
 
-            <div class="grid gap-6 lg:grid-cols-2">
+            <!-- ========================================== -->
+            <!-- IMÁGENES -->
+            <!-- ========================================== -->
+            <div class="border-t border-marron-claro pt-6">
+                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">📸 Imagen principal</h3>
                 <div>
-                    <label for="hours" class="block text-sm font-medium text-marron-oscuro">Horario</label>
-                    <input id="hours" name="hours" value="{{ old('hours') }}"
-                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
-                    @error('hours')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-marron-oscuro mb-1">📁 Subir imagen principal</label>
+                    <label class="block text-sm font-medium text-marron-oscuro mb-1">Subir imagen principal</label>
                     <input type="file" name="main_image" accept="image/jpeg,image/png,image/jpg,image/gif"
                         class="w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron file:mr-3 file:rounded-xl file:border-0 file:bg-marron-claro file:px-4 file:py-2 file:text-sm file:font-semibold file:text-marron-oscuro hover:file:bg-marron-medio hover:file:text-white">
                     <p class="text-xs text-marron/60 mt-1">Formatos: JPG, PNG, GIF (máx. 2MB)</p>
@@ -150,9 +227,8 @@
                 </div>
             </div>
 
-            <!-- Galería de imágenes extras -->
-            <div class="border-t border-marron-claro pt-4">
-                <h3 class="text-md font-semibold text-marron-oscuro mb-3">🖼️ Imágenes extras (opcional)</h3>
+            <div class="border-t border-marron-claro pt-6">
+                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">🖼️ Galería de imágenes (opcional)</h3>
                 <div id="gallery-container">
                     <div class="gallery-item mb-4 p-4 border border-marron-claro rounded-2xl bg-piel/30">
                         <div class="flex justify-between items-center mb-3">
@@ -188,10 +264,11 @@
     </div>
 
     <script>
-        // Variables del mapa
+        // ==========================================
+        // FUNCIONES DEL MAPA
+        // ==========================================
         let map;
         let marker;
-        
         const BERISSO_CENTER = [-34.8731, -57.8867];
         
         function initMap() {
@@ -295,7 +372,139 @@
             );
         }
 
-        // Galería dinámica
+        // ==========================================
+        // FUNCIONES DEL SELECTOR DE HORARIOS
+        // ==========================================
+        
+        // Toggle para mostrar/ocultar el día seleccionado
+        function toggleDia(checkbox, dia) {
+            const container = document.getElementById('dia-' + slugify(dia));
+            if (checkbox.checked) {
+                container.classList.remove('hidden');
+                // Agregar clase de animación
+                container.style.opacity = '0';
+                setTimeout(() => {
+                    container.style.opacity = '1';
+                    container.style.transition = 'opacity 0.3s ease';
+                }, 10);
+            } else {
+                container.classList.add('hidden');
+            }
+            actualizarHorarioFinal();
+        }
+
+        // Función para eliminar un día (desmarcar checkbox)
+        function eliminarDia(slug) {
+            const dia = slug.replace(/-/g, ' ');
+            // Buscar el checkbox correspondiente
+            const checkboxes = document.querySelectorAll('input[name="dias_seleccionados[]"]');
+            checkboxes.forEach(cb => {
+                if (cb.value === dia) {
+                    cb.checked = false;
+                    toggleDia(cb, dia);
+                }
+            });
+        }
+
+        // Agregar turno a un día específico
+        function agregarTurno(diaSlug) {
+            const container = document.getElementById('turnos-' + diaSlug);
+            const turnoCount = container.querySelectorAll('.turno-item').length;
+            
+            const nuevoTurno = document.createElement('div');
+            nuevoTurno.className = 'turno-item grid grid-cols-2 gap-3 items-end relative';
+            nuevoTurno.innerHTML = `
+                <div>
+                    <label class="block text-xs font-medium text-marron-oscuro mb-1">Desde</label>
+                    <input type="time" name="horarios[${diaSlug}][turnos][${turnoCount}][desde]" 
+                        value="09:00"
+                        class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-marron-oscuro mb-1">Hasta</label>
+                    <input type="time" name="horarios[${diaSlug}][turnos][${turnoCount}][hasta]" 
+                        value="17:00"
+                        class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
+                </div>
+                <button type="button" class="absolute -top-2 -right-2 text-red-500 hover:text-red-700 text-sm bg-white rounded-full w-6 h-6 flex items-center justify-center border border-marron-claro" onclick="eliminarTurno(this)">
+                    ×
+                </button>
+            `;
+            container.appendChild(nuevoTurno);
+            actualizarHorarioFinal();
+        }
+
+        // Eliminar un turno específico
+        function eliminarTurno(btn) {
+            const turnoItem = btn.closest('.turno-item');
+            const container = turnoItem.parentElement;
+            if (container.querySelectorAll('.turno-item').length > 1) {
+                turnoItem.remove();
+                actualizarHorarioFinal();
+            } else {
+                alert('Debe haber al menos un turno por día');
+            }
+        }
+
+        // Toggle para 24hs
+        function toggle24hs(checkbox) {
+            const contenedorDias = document.getElementById('horarios-container');
+            const checkboxes = document.querySelectorAll('input[name="dias_seleccionados[]"]');
+            
+            if (checkbox.checked) {
+                // Deshabilitar todos los checkboxes de días
+                checkboxes.forEach(cb => {
+                    cb.disabled = true;
+                    cb.checked = false;
+                    toggleDia(cb, cb.value);
+                });
+                contenedorDias.style.opacity = '0.5';
+                contenedorDias.style.pointerEvents = 'none';
+                
+                // Ocultar todos los días
+                document.querySelectorAll('.dia-container').forEach(el => {
+                    el.classList.add('hidden');
+                });
+            } else {
+                // Habilitar todos los checkboxes de días
+                checkboxes.forEach(cb => {
+                    cb.disabled = false;
+                });
+                contenedorDias.style.opacity = '1';
+                contenedorDias.style.pointerEvents = 'auto';
+            }
+            actualizarHorarioFinal();
+        }
+
+        // Función auxiliar para convertir texto a slug
+        function slugify(text) {
+            // Reemplazar caracteres especiales manualmente
+            const mapa = {
+                'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u',
+                'Á': 'a', 'É': 'e', 'Í': 'i', 'Ó': 'o', 'Ú': 'u',
+                'ñ': 'n', 'Ñ': 'n'
+            };
+            
+            let result = text.toString().toLowerCase();
+            
+            // Reemplazar tildes
+            for (let key in mapa) {
+                result = result.replaceAll(key, mapa[key]);
+            }
+            
+            // Reemplazar espacios y caracteres especiales
+            result = result.replace(/\s+/g, '-')        // espacios a guiones
+                        .replace(/[^\w\-]+/g, '')    // eliminar caracteres no alfanuméricos
+                        .replace(/\-\-+/g, '-')      // múltiples guiones a uno solo
+                        .replace(/^-+/, '')          // guiones al inicio
+                        .replace(/-+$/, '');         // guiones al final
+            
+            return result;
+        }
+
+        // ==========================================
+        // FUNCIONES DE LA GALERÍA DE IMÁGENES
+        // ==========================================
         function setupGallery() {
             let galleryIndex = 1;
             const container = document.getElementById('gallery-container');
@@ -325,8 +534,53 @@
             });
         }
 
-        // Inicializar
+        // ==========================================
+        // ACTUALIZAR CAMPO OCULTO HOURS
+        // ==========================================
+        function actualizarHorarioFinal() {
+            const checkboxes = document.querySelectorAll('input[name="dias_seleccionados[]"]:checked');
+            const abierto24hs = document.querySelector('input[name="abierto_24hs"]').checked;
+            const hoursInput = document.getElementById('hours-input');
+            
+            if (abierto24hs) {
+                hoursInput.value = 'Abierto 24 horas';
+                return;
+            }
+            
+            if (checkboxes.length === 0) {
+                hoursInput.value = '';
+                return;
+            }
+            
+            let horarioTexto = [];
+            
+            checkboxes.forEach(cb => {
+                const dia = cb.value;
+                const diaSlug = slugify(dia);
+                const turnos = document.querySelectorAll(`#turnos-${diaSlug} .turno-item`);
+                let turnosTexto = [];
+                
+                turnos.forEach(turno => {
+                    const desde = turno.querySelector('input[name*="[desde]"]').value;
+                    const hasta = turno.querySelector('input[name*="[hasta]"]').value;
+                    if (desde && hasta) {
+                        turnosTexto.push(`${desde} - ${hasta}`);
+                    }
+                });
+                
+                if (turnosTexto.length > 0) {
+                    horarioTexto.push(`${dia}: ${turnosTexto.join(', ')}`);
+                }
+            });
+            
+            hoursInput.value = horarioTexto.join(' | ');
+        }
+
+        // ==========================================
+        // INICIALIZAR
+        // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
+            // Mapa
             if (typeof L === 'undefined') {
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
@@ -345,10 +599,26 @@
             document.getElementById('get-current-location').addEventListener('click', getCurrentLocation);
             setupGallery();
             
+            // Si hay dirección, buscar automáticamente
             const addressInput = document.getElementById('address');
             if (addressInput.value.trim()) {
                 setTimeout(searchAddress, 500);
             }
+            
+            // Actualizar horario final cuando cambie cualquier input
+            document.addEventListener('change', function(e) {
+                if (e.target.name && e.target.name.includes('horarios')) {
+                    setTimeout(actualizarHorarioFinal, 100);
+                }
+            });
+            document.addEventListener('input', function(e) {
+                if (e.target.name && e.target.name.includes('horarios')) {
+                    setTimeout(actualizarHorarioFinal, 100);
+                }
+            });
+            
+            // Inicializar horarios si hay días seleccionados
+            setTimeout(actualizarHorarioFinal, 500);
         });
     </script>
 @endsection
