@@ -66,9 +66,7 @@
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- MAPA (debajo de la dirección) -->
-            <!-- ========================================== -->
+            <!-- MAPA -->
             <div class="border border-marron-claro rounded-2xl p-4 bg-piel/30">
                 <div class="flex flex-wrap gap-3 mb-3">
                     <button type="button" id="search-address" 
@@ -81,15 +79,13 @@
                     </button>
                 </div>
 
-                <!-- Contenedor del mapa -->
                 <div id="location-map" class="rounded-2xl overflow-hidden border border-marron-claro shadow-sm" style="height: 350px; width: 100%; background-color: #e9e0d1;"></div>
                 
-                <!-- Campos ocultos para coordenadas -->
                 <input type="hidden" id="latitude" name="latitude">
                 <input type="hidden" id="longitude" name="longitude">
                 
                 <p class="text-xs text-marron/60 mt-2">
-                    💡 Podés arrastrar el marcador para ajustar la ubicación exacta.
+                    💡 Podés arrastrar el marcador 🧷 para ajustar la ubicación exacta.
                 </p>
             </div>
 
@@ -144,18 +140,19 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-marron-oscuro mb-1">📁 Subir imagen principal del negocio (archivo)</label>
+                    <label class="block text-sm font-medium text-marron-oscuro mb-1">📁 Subir imagen principal</label>
                     <input type="file" name="main_image" accept="image/jpeg,image/png,image/jpg,image/gif"
                         class="w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron file:mr-3 file:rounded-xl file:border-0 file:bg-marron-claro file:px-4 file:py-2 file:text-sm file:font-semibold file:text-marron-oscuro hover:file:bg-marron-medio hover:file:text-white">
                     <p class="text-xs text-marron/60 mt-1">Formatos: JPG, PNG, GIF (máx. 2MB)</p>
+                    @error('main_image')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- SECCIÓN: GALERÍA DE IMÁGENES EXTRAS -->
-            <!-- ========================================== -->
-
-                <h3 class="text-md font-semibold text-marron-oscuro mb-3"> Imágenes extras (opcional)</h3>
+            <!-- Galería de imágenes extras -->
+            <div class="border-t border-marron-claro pt-4">
+                <h3 class="text-md font-semibold text-marron-oscuro mb-3">🖼️ Imágenes extras (opcional)</h3>
                 <div id="gallery-container">
                     <div class="gallery-item mb-4 p-4 border border-marron-claro rounded-2xl bg-piel/30">
                         <div class="flex justify-between items-center mb-3">
@@ -174,7 +171,10 @@
                     class="mt-2 inline-flex items-center gap-2 text-marron-oscuro hover:text-marron-medio text-sm font-semibold">
                     + Agregar otra imagen
                 </button>
-
+                @error('gallery_images.*')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center pt-4">
                 <button type="submit" class="rounded-2xl bg-marron-claro px-6 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
@@ -194,7 +194,6 @@
         
         const BERISSO_CENTER = [-34.8731, -57.8867];
         
-        // Inicializar el mapa
         function initMap() {
             if (typeof L === 'undefined') {
                 setTimeout(initMap, 100);
@@ -214,7 +213,6 @@
                 title: 'Arrastrame para ajustar la ubicación'
             }).addTo(map);
             
-            // Actualizar coordenadas ocultas al arrastrar
             marker.on('dragend', function(event) {
                 const position = marker.getLatLng();
                 document.getElementById('latitude').value = position.lat;
@@ -222,7 +220,6 @@
             });
         }
 
-        // Buscar dirección y mover el marcador
         function searchAddress() {
             const address = document.getElementById('address').value;
             if (!address.trim()) {
@@ -249,13 +246,6 @@
                         marker.setLatLng([lat, lon]);
                         document.getElementById('latitude').value = lat;
                         document.getElementById('longitude').value = lon;
-                        
-                        // Feedback visual
-                        const addressInput = document.getElementById('address');
-                        addressInput.style.backgroundColor = '#e8f5e9';
-                        setTimeout(() => {
-                            addressInput.style.backgroundColor = '';
-                        }, 500);
                     } else {
                         alert('No se encontró la ubicación. Probá con una dirección más específica.');
                     }
@@ -270,7 +260,6 @@
                 });
         }
         
-        // Usar ubicación actual
         function getCurrentLocation() {
             if (!navigator.geolocation) {
                 alert('Tu navegador no soporta geolocalización');
@@ -338,7 +327,6 @@
 
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
-            // Cargar Leaflet
             if (typeof L === 'undefined') {
                 const link = document.createElement('link');
                 link.rel = 'stylesheet';
@@ -357,7 +345,6 @@
             document.getElementById('get-current-location').addEventListener('click', getCurrentLocation);
             setupGallery();
             
-            // Si ya hay una dirección escrita, buscarla automáticamente
             const addressInput = document.getElementById('address');
             if (addressInput.value.trim()) {
                 setTimeout(searchAddress, 500);

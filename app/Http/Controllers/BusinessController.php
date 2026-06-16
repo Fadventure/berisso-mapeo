@@ -64,7 +64,7 @@ class BusinessController extends Controller
 
     public function store(Request $request)
     {
-        // Validación con coordenadas incluidas
+        // Validación - SOLO ARCHIVOS LOCALES (sin URLs)
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -79,17 +79,21 @@ class BusinessController extends Controller
             'facebook' => 'nullable|url|max:255', 
             'instagram' => 'nullable|url|max:255',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'main_image_url' => 'nullable|url|max:255',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gallery_urls.*' => 'nullable|url|max:255',
         ]);
 
+        // Generar slug para carpeta
+        $slug = Str::slug($data['name']);
+        
         // Procesar imagen principal
         if ($request->hasFile('main_image')) {
-            $path = $request->file('main_image')->store('businesses', 'public');
+            $extension = $request->file('main_image')->extension();
+            $path = $request->file('main_image')->storeAs(
+                "businesses/{$slug}",
+                "principal.{$extension}",
+                'public'
+            );
             $data['image'] = $path;
-        } elseif ($request->filled('main_image_url')) {
-            $data['image'] = $request->input('main_image_url');
         } else {
             $data['image'] = null;
         }
@@ -97,7 +101,7 @@ class BusinessController extends Controller
         $data['user_id'] = Auth::id();
         $data['slug'] = $this->makeUniqueSlug($data['name']);
         
-        // NUEVO: El negocio se crea como PENDIENTE (no visible al público)
+        // El negocio se crea como PENDIENTE (no visible al público)
         $data['status'] = 'pending';
         $data['published'] = false;
 
@@ -107,20 +111,18 @@ class BusinessController extends Controller
         // Procesar galería de imágenes extras
         $galleryImages = [];
 
-        // Procesar archivos subidos
         if ($request->hasFile('gallery_images')) {
+            $index = 1;
             foreach ($request->file('gallery_images') as $file) {
                 if ($file && $file->isValid()) {
-                    $galleryImages[] = $file->store('businesses/gallery', 'public');
-                }
-            }
-        }
-
-        // Procesar URLs de galería
-        if ($request->filled('gallery_urls')) {
-            foreach ($request->input('gallery_urls') as $url) {
-                if ($url && filter_var($url, FILTER_VALIDATE_URL)) {
-                    $galleryImages[] = $url;
+                    $extension = $file->extension();
+                    $path = $file->storeAs(
+                        "businesses/{$slug}/galeria",
+                        "{$index}.{$extension}",
+                        'public'
+                    );
+                    $galleryImages[] = $path;
+                    $index++;
                 }
             }
         }
