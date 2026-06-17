@@ -14,8 +14,16 @@
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <header class="mb-8 flex flex-col gap-4 rounded-3xl border border-marron-claro bg-white/90 p-6 shadow-sm shadow-marron-claro/70 backdrop-blur-sm md:flex-row md:items-center md:justify-between">
                 <div>
-                    <a href="{{ route('home') }}" class="text-2xl font-semibold text-marron-oscuro">Berisso Mapeo</a>
-                    <p class="mt-1 text-sm text-marron/80">Directorios locales de negocios y servicios.</p>
+                    <a href="{{ route('home') }}" class="flex items-center gap-4">
+                        <!-- LOGO CON INICIALES (Opción 3) -->
+                        <img src="{{ asset('images/Logo2.png') }}" 
+                             alt="Berisso Mapeo" 
+                             class="h-14 h-18 w-18 rounded-full">
+                        <div>
+                            <span class="text-3xl font-semibold text-marron-oscuro">Berisso Mapeo</span>
+                            <p class="mt-1 text-sm text-marron/80 hidden md:block">Directorios locales de negocios y servicios.</p>
+                        </div>
+                    </a>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
@@ -25,7 +33,7 @@
                         @if(auth()->user()->is_admin)
                             <a href="{{ route('admin.dashboard') }}" 
                                class="rounded-full border border-marron-claro bg-amber-100 px-4 py-2 text-sm text-amber-800 transition hover:bg-amber-200">
-                                🔧 Admin
+                                Admin
                             </a>
                         @endif
                     
