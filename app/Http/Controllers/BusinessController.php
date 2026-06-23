@@ -81,6 +81,21 @@ class BusinessController extends Controller
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+    
+    // ==========================================
+    // VALIDACIÓN CONTRA DUPLICADOS
+    // ==========================================
+    // Verificar si el usuario ya tiene un negocio con el mismo nombre
+    $existingBusiness = Business::where('user_id', Auth::id())
+        ->where('name', $data['name'])
+        ->first();
+    
+    if ($existingBusiness) {
+        $statusText = $existingBusiness->status === 'pending' ? 'en revisión' : 'aprobado';
+        return redirect()->back()
+            ->with('error', "Ya tenés un negocio '{$data['name']}' ({$statusText}). No podés crear otro con el mismo nombre.")
+            ->withInput();
+    }
 
         // Generar slug para carpeta
         $slug = Str::slug($data['name']);

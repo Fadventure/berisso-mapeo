@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    @if(session('error'))
+        <div class="mb-6 rounded-2xl border border-red-300 bg-red-50 px-5 py-4 text-red-800 shadow-sm">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="rounded-3xl border border-marron-claro bg-white p-6 shadow-sm shadow-marron-claro/80">
         <div class="mb-8">
             <h1 class="text-3xl font-semibold text-marron-oscuro">Publicar un negocio</h1>
@@ -253,9 +258,11 @@
 
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center pt-4">
-                <button type="submit" class="rounded-2xl bg-marron-claro px-6 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
-                    Publicar negocio
-                </button>
+            <button type="submit" 
+                id="submit-btn"
+                class="rounded-2xl bg-marron-claro px-6 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
+                Publicar negocio
+            </button>
                 <a href="{{ route('home') }}" class="text-sm font-medium text-marron-oscuro underline hover:text-marron-medio">
                     Volver al directorio
                 </a>
@@ -619,6 +626,31 @@
             
             // Inicializar horarios si hay días seleccionados
             setTimeout(actualizarHorarioFinal, 500);
+
+            // ==========================================
+            // PROTECCIÓN CONTRA ENVÍOS DUPLICADOS
+            // ==========================================
         });
+        
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submit-btn');
+
+                if (form && submitBtn) {
+            form.addEventListener('submit', function() {
+                // Deshabilitar el botón para evitar múltiples envíos
+                submitBtn.disabled = true;
+                submitBtn.textContent = '⏳ Publicando...';
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            });
+            }
+            
+            // Restaurar el botón si hay errores del servidor
+            @if($errors->any())
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Publicar negocio';
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            @endif
     </script>
 @endsection
