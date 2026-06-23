@@ -33,9 +33,33 @@
             <div class="space-y-4">
                 @foreach($pendingBusinesses as $business)
                     <div class="border border-marron-claro rounded-2xl p-4 bg-piel/30">
-                        <div class="flex flex-wrap justify-between items-start gap-4">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-2">
+                        <div class="flex flex-wrap gap-4">
+                            <!-- IMAGEN DEL NEGOCIO -->
+                            <div class="flex-shrink-0">
+                                @php
+                                    $imageSrc = null;
+                                    if ($business->image) {
+                                        if (Str::startsWith($business->image, ['http://', 'https://'])) {
+                                            $imageSrc = $business->image;
+                                        } else {
+                                            $imageSrc = Storage::url($business->image);
+                                        }
+                                    }
+                                @endphp
+                                
+                                @if($imageSrc)
+                                    <img src="{{ $imageSrc }}" alt="{{ $business->name }}" 
+                                         class="w-24 h-24 object-cover rounded-xl border border-marron-claro">
+                                @else
+                                    <div class="w-24 h-24 bg-piel rounded-xl border border-marron-claro flex items-center justify-center text-marron/40 text-xs text-center p-2">
+                                        Sin imagen
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- DATOS DEL NEGOCIO -->
+                            <div class="flex-1 min-w-[200px]">
+                                <div class="flex items-center gap-2 mb-2 flex-wrap">
                                     <span class="text-xs font-semibold text-marron-oscuro bg-white px-2 py-1 rounded-full border border-marron-claro">
                                         {{ $business->category?->name ?? 'Sin categoría' }}
                                     </span>
@@ -48,7 +72,9 @@
                                 <p class="text-sm text-marron/80 mt-1">📍 {{ $business->address }}</p>
                                 <p class="text-xs text-marron/60 mt-1">📅 Creado: {{ $business->created_at->format('d/m/Y H:i') }}</p>
                             </div>
-                            <div class="flex gap-2">
+
+                            <!-- BOTÓN -->
+                            <div class="flex items-center">
                                 <a href="{{ route('admin.businesses.show', $business) }}" 
                                    class="rounded-xl bg-marron-claro px-4 py-2 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
                                     Ver detalles
