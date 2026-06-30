@@ -296,4 +296,39 @@ class BusinessController extends Controller
 
         return $slug;
     }
+    /**
+ * Eliminar un negocio (solo para el dueño)
+    */
+    public function destroy(Business $business)
+    {
+        // Verificar que el usuario sea el dueño
+        if ($business->user_id !== auth()->id()) {
+            abort(403, 'No tenés permiso para eliminar este negocio.');
+        }
+        
+        // Eliminar imágenes de la galería
+        foreach ($business->images as $image) {
+            if (!Str::startsWith($image->image_url, ['http://', 'https://'])) {
+                Storage::disk('public')->delete($image->image_url);
+            }
+            $image->delete();
+        }
+        
+        // Eliminar imagen principal si es local
+        if ($business->image && !Str::startsWith($business->image, ['http://', 'https://'])) {
+            Storage::disk('public')->delete($business->image);
+        }
+        
+        // Eliminar la carpeta del negocio si está vacía
+        $folderPath = "businesses/{$business->slug}";
+        if (Storage::disk('public')->exists($folderPath)) {
+            Storage::disk('public')->deleteDirectory($folderPath);
+        }
+        
+        // Eliminar el negocio
+        $business->delete();
+        
+        return redirect()->route('dashboard')
+            ->with('success', '✅ Tu negocio fue eliminado correctamente.');
+    }
 }

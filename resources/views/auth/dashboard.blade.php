@@ -84,7 +84,7 @@
     <a href="{{ route('businesses.edit', $business) }}" 
        class="rounded-xl border border-marron-claro px-3 py-2 text-sm font-medium text-marron-oscuro transition hover:bg-piel-oscuro"
        title="Editar negocio">
-        ✏️
+        Editar Negocio
     </a>
 </div>
                     </div>

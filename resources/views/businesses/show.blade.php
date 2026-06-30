@@ -70,14 +70,12 @@
 
             <!-- Ubicación / Mapa -->
             <div class="rounded-3xl border border-marron-claro bg-white p-6 md:p-8 shadow-sm shadow-marron-claro/80">
-
-                    @if($business->address)
-                        <div>
-                            <h3 class="text-sm font-semibold text-marron-oscuro uppercase tracking-wide mb-2">📌 Dirección 
-                                <p class="text-marron">{{ $business->address }}</p>
-                            </h3>
-                        </div>
-                    @endif
+                @if($business->address)
+                    <div>
+                        <h3 class="text-sm font-semibold text-marron-oscuro uppercase tracking-wide mb-2">📌 Dirección</h3>
+                        <p class="text-marron">{{ $business->address }}</p>
+                    </div>
+                @endif
                 
                 <div id="business-map" class="rounded-2xl overflow-hidden border border-marron-claro shadow-sm" style="height: 400px; width: 100%; background-color: #e9e0d1;"></div>
 
@@ -116,12 +114,18 @@
                                target="_blank" 
                                rel="noreferrer"
                                class="inline-flex items-center gap-2 rounded-2xl bg-marron-claro px-5 py-2.5 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                                </svg>
                                 Google Maps
                             </a>
                             <a href="https://www.openstreetmap.org/search?query={{ $addressEncoded }}" 
                                target="_blank" 
                                rel="noreferrer"
                                class="inline-flex items-center gap-2 rounded-2xl border border-marron-claro bg-white px-5 py-2.5 text-sm font-semibold text-marron-oscuro transition hover:bg-piel-oscuro">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
                                 OpenStreetMap
                             </a>
                         @endif
@@ -201,18 +205,67 @@
                 </div>
             </div>
 
-            <div class="rounded-3xl border border-marron-claro bg-piel p-6 shadow-sm shadow-marron-claro/80">
-                <p class="text-sm text-marron">
-                    <span class="font-semibold">Publicado por:</span><br>
-                    {{ $business->user?->name ?? 'Usuario invitado' }}
-                </p>
-                <p class="text-xs text-marron/70 mt-2">
-                    📅 {{ $business->created_at->format('d/m/Y') }}
-                </p>
-            </div>
+            <!-- ========================================== -->
+            <!-- BLOQUE PARA EL DUEÑO DEL NEGOCIO -->
+            <!-- ========================================== -->
+            @auth
+                @if(auth()->id() === $business->user_id)
+                    <div class="rounded-3xl border border-marron-claro bg-piel p-6 shadow-sm shadow-marron-claro/80">
+                        <h3 class="text-sm font-semibold text-marron-oscuro uppercase tracking-wide mb-3">⚙️ Administrar negocio</h3>
+                        
+                        <div class="space-y-2">
+                            <!-- Botón Editar (solo si NO está aprobado) -->
+                            @if($business->status !== 'approved')
+                                <a href="{{ route('businesses.edit', $business) }}" 
+                                   class="block w-full text-center rounded-2xl bg-marron-claro px-4 py-2.5 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
+                                    ✏️ Editar negocio
+                                </a>
+                            @endif
+                            
+                            <!-- Botón Eliminar (siempre visible para el dueño) -->
+                            <form action="{{ route('businesses.destroy', $business) }}" method="POST" 
+                                  onsubmit="return confirm('⚠️ ¿Estás seguro de eliminar este negocio?\n\nEsta acción no se puede deshacer y se eliminarán todas las imágenes asociadas.')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="block w-full text-center rounded-2xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700">
+                                    🗑️ Eliminar negocio
+                                </button>
+                            </form>
+                            
+                            <p class="text-xs text-marron/60 text-center mt-2">
+                                Solo podés eliminar tu propio negocio si ya no está activo.
+                            </p>
+                        </div>
+                    </div>
+                @else
+                    <!-- Si NO es el dueño, mostrar "Publicado por" -->
+                    <div class="rounded-3xl border border-marron-claro bg-piel p-6 shadow-sm shadow-marron-claro/80">
+                        <p class="text-sm text-marron">
+                            <span class="font-semibold">Publicado por:</span><br>
+                            {{ $business->user?->name ?? 'Usuario invitado' }}
+                        </p>
+                        <p class="text-xs text-marron/70 mt-2">
+                            📅 {{ $business->created_at->format('d/m/Y') }}
+                        </p>
+                    </div>
+                @endif
+            @else
+                <!-- Usuario no autenticado: mostrar "Publicado por" -->
+                <div class="rounded-3xl border border-marron-claro bg-piel p-6 shadow-sm shadow-marron-claro/80">
+                    <p class="text-sm text-marron">
+                        <span class="font-semibold">Publicado por:</span><br>
+                        {{ $business->user?->name ?? 'Usuario invitado' }}
+                    </p>
+                    <p class="text-xs text-marron/70 mt-2">
+                        📅 {{ $business->created_at->format('d/m/Y') }}
+                    </p>
+                </div>
+            @endauth
         </div>
     </div>
 
+    <!-- Botón Volver -->
     <div class="flex flex-wrap gap-3">
         <a href="{{ route('home') }}" class="rounded-2xl border border-marron-claro bg-white px-6 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-piel-oscuro">
             ← Volver al directorio

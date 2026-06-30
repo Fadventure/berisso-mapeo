@@ -18,7 +18,7 @@ Route::get('/businesses/{business}', [BusinessController::class, 'show'])
     ->name('businesses.show');
 
 // ==========================================
-// RUTAS PARA EDITAR NEGOCIOS (AGREGAR ESTO)
+// RUTAS PARA EDITAR NEGOCIOS
 // ==========================================
 Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])
     ->middleware('auth')
@@ -27,6 +27,13 @@ Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])
 Route::put('/businesses/{business}', [BusinessController::class, 'update'])
     ->middleware('auth')
     ->name('businesses.update');
+
+// ==========================================
+// RUTA PARA ELIMINAR NEGOCIOS (AGREGAR ESTO)
+// ==========================================
+Route::delete('/businesses/{business}', [BusinessController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('businesses.destroy');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
