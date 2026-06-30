@@ -17,6 +17,17 @@ Route::post('/businesses', [BusinessController::class, 'store'])
 Route::get('/businesses/{business}', [BusinessController::class, 'show'])
     ->name('businesses.show');
 
+// ==========================================
+// RUTAS PARA EDITAR NEGOCIOS (AGREGAR ESTO)
+// ==========================================
+Route::get('/businesses/{business}/edit', [BusinessController::class, 'edit'])
+    ->middleware('auth')
+    ->name('businesses.edit');
+
+Route::put('/businesses/{business}', [BusinessController::class, 'update'])
+    ->middleware('auth')
+    ->name('businesses.update');
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
