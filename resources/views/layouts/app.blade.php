@@ -20,8 +20,8 @@
                              alt="Berisso Mapeo" 
                              class="h-14 h-18 w-18 rounded-full">
                         <div>
-                            <span class="text-3xl font-semibold text-marron-oscuro">Berisso Mapeo</span>
-                            <p class="mt-1 text-sm text-marron/80 hidden md:block">Directorios locales de negocios y servicios.</p>
+                            <span class="text-3xl font-semibold text-marron-oscuro">Berisso Market</span>
+                            <p class="mt-1 text-sm text-marron/80 hidden md:block">Direccion de los negocios locales y servicios.</p>
                         </div>
                     </a>
                 </div>

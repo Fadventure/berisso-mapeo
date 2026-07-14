@@ -3,8 +3,7 @@
 @section('content')
 <div class="rounded-3xl border border-marron-claro bg-white p-6 shadow-sm shadow-marron-claro/80">
     <div class="mb-8">
-        <h1 class="text-3xl font-semibold text-marron-oscuro">✏️ Editar negocio</h1>
-        <p class="mt-2 text-sm text-marron/80">Modificá los datos de tu comercio.</p>
+        <h1 class="text-3xl font-semibold text-marron-oscuro">Modificá los datos de tu comercio.</h1>
         @if($business->status === 'pending')
             <p class="mt-2 text-sm text-yellow-600">⏳ Este negocio está pendiente de revisión.</p>
         @elseif($business->status === 'rejected')
@@ -98,7 +97,7 @@
             <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude', $business->longitude) }}">
             
             <p class="text-xs text-marron/60 mt-2">
-                💡 Podés arrastrar el marcador 🧷 para ajustar la ubicación exacta.
+                💡 Podés arrastrar el marcador para ajustar la ubicación exacta.
             </p>
         </div>
 
@@ -289,7 +288,7 @@
 
         <!-- IMAGEN PRINCIPAL -->
         <div class="border-t border-marron-claro pt-6">
-            <h3 class="text-lg font-semibold text-marron-oscuro mb-4">📸 Imagen principal</h3>
+            <h3 class="text-lg font-semibold text-marron-oscuro mb-4">Imagen principal del negocio</h3>
             
             @php
                 $currentImage = null;
@@ -322,7 +321,7 @@
 
         <!-- GALERÍA DE IMÁGENES -->
         <div class="border-t border-marron-claro pt-6">
-            <h3 class="text-lg font-semibold text-marron-oscuro mb-4">🖼️ Galería de imágenes</h3>
+            <h3 class="text-lg font-semibold text-marron-oscuro mb-4">Imágenes extras</h3>
             
             @if($business->images->count() > 0)
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
@@ -346,7 +345,7 @@
                         </div>
                     @endforeach
                 </div>
-                <p class="text-xs text-marron/60 mb-4">⚠️ Marcá la ✕ en las imágenes que querés eliminar.</p>
+                <p class="text-m text-marron/60 mb-4">⚠️ Marcá la ✕ en las imágenes que querés eliminar.</p>
             @else
                 <p class="text-sm text-marron/60 mb-4">No hay imágenes en la galería.</p>
             @endif
@@ -376,7 +375,7 @@
         <!-- Botones -->
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center pt-4">
             <button type="submit" id="submitBtn" class="rounded-2xl bg-marron-claro px-6 py-3 text-sm font-semibold text-marron-oscuro transition hover:bg-marron-medio hover:text-white">
-                💾 Actualizar negocio
+                Guardar cambios
             </button>
             <a href="{{ route('dashboard') }}" class="text-sm font-medium text-marron-oscuro underline hover:text-marron-medio">
                 Cancelar

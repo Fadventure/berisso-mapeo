@@ -25,7 +25,7 @@
 
     <!-- Negocios pendientes -->
     <div class="rounded-3xl border border-marron-claro bg-white p-6 shadow-sm shadow-marron-claro/80">
-        <h2 class="text-xl font-semibold text-marron-oscuro mb-4">📋 Negocios pendientes de revisión</h2>
+        <h2 class="text-xl font-semibold text-marron-oscuro mb-4"> Negocios pendientes de revisión</h2>
         
         @if($pendingBusinesses->isEmpty())
             <p class="text-center text-marron/60 py-8">✅ ¡No hay negocios pendientes por revisar!</p>

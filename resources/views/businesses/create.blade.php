@@ -90,137 +90,138 @@
                 <input type="hidden" id="longitude" name="longitude">
                 
                 <p class="text-xs text-marron/60 mt-2">
-                    💡 Podés arrastrar el marcador 🧷 para ajustar la ubicación exacta.
+                    💡 Podés arrastrar el marcador para ajustar la ubicación exacta.
                 </p>
             </div>
 
             <!-- ========================================== -->
             <!-- SELECTOR DE HORARIOS - Opción 2 -->
             <!-- ========================================== -->
+            <div class="border-t border-marron-claro pt-6">
+                    <h3 class="text-lg font-semibold text-marron-oscuro mb-4">🕐 Horario de atención</h3>
+                    <p class="text-sm text-marron/80 mb-4">Seleccioná los días y horarios de atención.</p>
 
-                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">🕐 Horario de atención</h3>
-                <p class="text-sm text-marron/80 mb-4">Seleccioná los días y horarios de atención.</p>
+                    <div class="space-y-4">
+                        <!-- Días de la semana -->
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                            @php
+                                $dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+                                $diasAbreviados = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+                                $horariosGuardados = old('horarios', []);
+                            @endphp
+                            
+                            @foreach($dias as $index => $dia)
+                                <label class="flex items-center gap-2 text-sm text-marron-oscuro bg-piel/50 px-3 py-2 rounded-xl border border-marron-claro cursor-pointer hover:bg-piel">
+                                    <input type="checkbox" name="dias_seleccionados[]" value="{{ $dia }}" 
+                                        class="rounded border-marron-claro text-marron-medio focus:ring-marron-claro/30"
+                                        {{ in_array($dia, old('dias_seleccionados', [])) ? 'checked' : '' }}
+                                        onchange="toggleDia(this, '{{ $dia }}')">
+                                    <span>{{ $dia }}</span>
+                                </label>
+                            @endforeach
+                        </div>
 
-                <div class="space-y-4">
-                    <!-- Días de la semana -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                        @php
-                            $dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-                            $diasAbreviados = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-                            $horariosGuardados = old('horarios', []);
-                        @endphp
-                        
-                        @foreach($dias as $index => $dia)
-                            <label class="flex items-center gap-2 text-sm text-marron-oscuro bg-piel/50 px-3 py-2 rounded-xl border border-marron-claro cursor-pointer hover:bg-piel">
-                                <input type="checkbox" name="dias_seleccionados[]" value="{{ $dia }}" 
-                                    class="rounded border-marron-claro text-marron-medio focus:ring-marron-claro/30"
-                                    {{ in_array($dia, old('dias_seleccionados', [])) ? 'checked' : '' }}
-                                    onchange="toggleDia(this, '{{ $dia }}')">
-                                <span>{{ $dia }}</span>
-                            </label>
-                        @endforeach
-                    </div>
-
-                    <!-- Contenedor de horarios por día -->
-                    <div id="horarios-container" class="space-y-4 mt-4">
-                        @foreach($dias as $index => $dia)
-                            <div id="dia-{{ Str::slug($dia) }}" class="dia-container hidden border border-marron-claro rounded-2xl p-4 bg-piel/20">
-                                <div class="flex justify-between items-center mb-3">
-                                    <h4 class="font-semibold text-marron-oscuro">{{ $dia }}</h4>
-                                    <button type="button" class="text-sm text-red-500 hover:text-red-700" onclick="eliminarDia('{{ Str::slug($dia) }}')">
-                                        Eliminar día
-                                    </button>
-                                </div>
-                                
-                                <div class="turnos-container space-y-3" id="turnos-{{ Str::slug($dia) }}">
-                                    <!-- Turno 1 (siempre presente) -->
-                                    <div class="turno-item grid grid-cols-2 gap-3 items-end">
-                                        <div>
-                                            <label class="block text-xs font-medium text-marron-oscuro mb-1">Desde</label>
-                                            <input type="time" name="horarios[{{ $dia }}][turnos][0][desde]" 
-                                                value="{{ old("horarios.{$dia}.turnos.0.desde", '09:00') }}"
-                                                class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
-                                        </div>
-                                        <div>
-                                            <label class="block text-xs font-medium text-marron-oscuro mb-1">Hasta</label>
-                                            <input type="time" name="horarios[{{ $dia }}][turnos][0][hasta]" 
-                                                value="{{ old("horarios.{$dia}.turnos.0.hasta", '13:00') }}"
-                                                class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
+                        <!-- Contenedor de horarios por día -->
+                        <div id="horarios-container" class="space-y-4 mt-4">
+                            @foreach($dias as $index => $dia)
+                                <div id="dia-{{ Str::slug($dia) }}" class="dia-container hidden border border-marron-claro rounded-2xl p-4 bg-piel/20">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <h4 class="font-semibold text-marron-oscuro">{{ $dia }}</h4>
+                                        <button type="button" class="text-sm text-red-500 hover:text-red-700" onclick="eliminarDia('{{ Str::slug($dia) }}')">
+                                            Eliminar día
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="turnos-container space-y-3" id="turnos-{{ Str::slug($dia) }}">
+                                        <!-- Turno 1 (siempre presente) -->
+                                        <div class="turno-item grid grid-cols-2 gap-3 items-end">
+                                            <div>
+                                                <label class="block text-xs font-medium text-marron-oscuro mb-1">Desde</label>
+                                                <input type="time" name="horarios[{{ $dia }}][turnos][0][desde]" 
+                                                    value="{{ old("horarios.{$dia}.turnos.0.desde", '09:00') }}"
+                                                    class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-marron-oscuro mb-1">Hasta</label>
+                                                <input type="time" name="horarios[{{ $dia }}][turnos][0][hasta]" 
+                                                    value="{{ old("horarios.{$dia}.turnos.0.hasta", '13:00') }}"
+                                                    class="w-full rounded-xl border border-marron-claro bg-white px-3 py-2 text-sm text-marron outline-none focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30">
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <button type="button" class="mt-3 text-sm text-marron-oscuro hover:text-marron-medio underline" 
+                                        onclick="agregarTurno('{{ Str::slug($dia) }}')">
+                                        + Agregar turno
+                                    </button>
                                 </div>
+                            @endforeach
+                        </div>
+                        
+                        <!-- Opción 24hs -->
+                        <div class="mt-4">
+                            <label class="flex items-center gap-2 text-sm text-marron-oscuro">
+                                <input type="checkbox" name="abierto_24hs" value="1" 
+                                    class="rounded border-marron-claro text-marron-medio focus:ring-marron-claro/30"
+                                    {{ old('abierto_24hs') ? 'checked' : '' }}
+                                    onchange="toggle24hs(this)">
+                                <span>🕛 Abierto 24 horas (ej: Farmacia de turno)</span>
+                            </label>
+                        </div>
 
-                                <button type="button" class="mt-3 text-sm text-marron-oscuro hover:text-marron-medio underline" 
-                                    onclick="agregarTurno('{{ Str::slug($dia) }}')">
-                                    + Agregar turno
-                                </button>
-                            </div>
-                        @endforeach
+                        <input type="hidden" name="hours" id="hours-input" value="{{ old('hours') }}">
                     </div>
 
-                    <!-- Opción 24hs -->
-                    <div class="mt-4">
-                        <label class="flex items-center gap-2 text-sm text-marron-oscuro">
-                            <input type="checkbox" name="abierto_24hs" value="1" 
-                                class="rounded border-marron-claro text-marron-medio focus:ring-marron-claro/30"
-                                {{ old('abierto_24hs') ? 'checked' : '' }}
-                                onchange="toggle24hs(this)">
-                            <span>🕛 Abierto 24 horas (ej: Farmacia de turno)</span>
-                        </label>
+
+                <!-- ========================================== -->
+                <!-- DATOS DE CONTACTO Y REDES SOCIALES -->
+                <!-- ========================================== -->
+                
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <div>
+                        <label for="website" class="block text-sm font-medium text-marron-oscuro">Página web</label>
+                        <input id="website" name="website" type="url" value="{{ old('website') }}"
+                            class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                        @error('website')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <input type="hidden" name="hours" id="hours-input" value="{{ old('hours') }}">
+                    <div>
+                        <label for="email_lugar" class="block text-sm font-medium text-marron-oscuro">Correo electrónico del negocio</label>
+                        <input id="email_lugar" name="email_lugar" type="email" value="{{ old('email_lugar') }}"
+                            class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                        @error('email_lugar')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
+                <div class="grid gap-6 lg:grid-cols-2">
+                    <div>
+                        <label for="instagram" class="block text-sm font-medium text-marron-oscuro">Instagram</label>
+                        <input id="instagram" name="instagram" type="url" value="{{ old('instagram') }}"
+                            class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                        @error('instagram')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-            <!-- ========================================== -->
-            <!-- DATOS DE CONTACTO Y REDES SOCIALES -->
-            <!-- ========================================== -->
-            <div class="grid gap-6 lg:grid-cols-2">
-                <div>
-                    <label for="website" class="block text-sm font-medium text-marron-oscuro">Página web</label>
-                    <input id="website" name="website" type="url" value="{{ old('website') }}"
-                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
-                    @error('website')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="email_lugar" class="block text-sm font-medium text-marron-oscuro">Correo electrónico del negocio</label>
-                    <input id="email_lugar" name="email_lugar" type="email" value="{{ old('email_lugar') }}"
-                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
-                    @error('email_lugar')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="grid gap-6 lg:grid-cols-2">
-                <div>
-                    <label for="instagram" class="block text-sm font-medium text-marron-oscuro">Instagram</label>
-                    <input id="instagram" name="instagram" type="url" value="{{ old('instagram') }}"
-                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
-                    @error('instagram')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="facebook" class="block text-sm font-medium text-marron-oscuro">Facebook</label>
-                    <input id="facebook" name="facebook" type="url" value="{{ old('facebook') }}"
-                        class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
-                    @error('facebook')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <div>
+                        <label for="facebook" class="block text-sm font-medium text-marron-oscuro">Facebook</label>
+                        <input id="facebook" name="facebook" type="url" value="{{ old('facebook') }}"
+                            class="mt-2 w-full rounded-2xl border border-marron-claro bg-piel px-4 py-3 text-sm text-marron outline-none transition focus:border-marron-medio focus:ring-2 focus:ring-marron-claro/30" />
+                        @error('facebook')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
-
             <!-- ========================================== -->
             <!-- IMÁGENES -->
             <!-- ========================================== -->
-
-                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">Imagen principal del negocio</h3>
+            <div class="border-t border-marron-claro pt-6">
+                <h3 class="text-lg font-semibold text-marron-oscuro mb-4"> Imagen principal del negocio</h3>
                 <div>
                     <label class="block text-sm font-medium text-marron-oscuro mb-1">Subir imagen</label>
                     <input type="file" name="main_image" accept="image/jpeg,image/png,image/jpg,image/gif"
@@ -230,32 +231,33 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+            </div>
 
 
-
-                <h3 class="text-lg font-semibold text-marron-oscuro mb-4">Galería de imágenes (opcional)</h3>
-                <div id="gallery-container">
-                    <div class="gallery-item mb-4 p-4 border border-marron-claro rounded-2xl bg-piel/30">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-sm font-semibold text-marron-oscuro">Imagen extra 1</span>
-                            <button type="button" class="remove-gallery text-red-500 hover:text-red-700 text-sm hidden">Eliminar</button>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-marron-oscuro mb-1">Subir archivo</label>
-                            <input type="file" name="gallery_images[]" accept="image/jpeg,image/png,image/jpg,image/gif"
-                                class="w-full rounded-xl border border-marron-claro bg-piel px-3 py-2 text-sm text-marron file:mr-2 file:rounded-lg file:border-0 file:bg-marron-claro file:px-3 file:py-1 file:text-xs file:font-semibold file:text-marron-oscuro hover:file:bg-marron-medio hover:file:text-white">
+                <div class="border-t border-marron-claro pt-6">
+                    <h3 class="text-lg font-semibold text-marron-oscuro mb-4">Imágenes extras (opcional)</h3>
+                    <div id="gallery-container">
+                        <div class="gallery-item mb-4 p-4 border border-marron-claro rounded-2xl bg-piel/30">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-sm font-semibold text-marron-oscuro">Imagen extra 1</span>
+                                <button type="button" class="remove-gallery text-red-500 hover:text-red-700 text-sm hidden">Eliminar</button>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-marron-oscuro mb-1">Subir archivo</label>
+                                <input type="file" name="gallery_images[]" accept="image/jpeg,image/png,image/jpg,image/gif"
+                                    class="w-full rounded-xl border border-marron-claro bg-piel px-3 py-2 text-sm text-marron file:mr-2 file:rounded-lg file:border-0 file:bg-marron-claro file:px-3 file:py-1 file:text-xs file:font-semibold file:text-marron-oscuro hover:file:bg-marron-medio hover:file:text-white">
+                            </div>
                         </div>
                     </div>
+
+                    <button type="button" id="add-more-images" 
+                        class="mt-2 inline-flex items-center gap-2 text-marron-oscuro hover:text-marron-medio text-sm font-semibold">
+                        + Agregar otra imagen
+                    </button>
+                    @error('gallery_images.*')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
-
-                <button type="button" id="add-more-images" 
-                    class="mt-2 inline-flex items-center gap-2 text-marron-oscuro hover:text-marron-medio text-sm font-semibold">
-                    + Agregar otra imagen
-                </button>
-                @error('gallery_images.*')
-                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center pt-4">
             <button type="submit" 
